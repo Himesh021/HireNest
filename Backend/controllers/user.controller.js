@@ -11,7 +11,10 @@ export const  register = async (req, res) => {
         success: false,
       });
     }
-    const existingUser = await User.findOne({ email });//point for learning--->
+const existingUser = await User.findOne({
+  $or: [{ email }, { phoneNumber }]
+});
+//point for learning--->
     if (existingUser) {
       return res.status(400).json({
         message: "User with this email or phone number already exists",
@@ -27,7 +30,7 @@ export const  register = async (req, res) => {
       password: hashedPassword,
       role,
     });
-    return res.status(200).json({
+    return res.status(201).json({
       message: `Account created successfully for ${fullname}`,
       success: true,
       user: await newUser.save(),
@@ -133,17 +136,21 @@ export const updateProfile = async (req, res) => {
   try {
     const { fullname,email,phoneNumber,bio, skills} = req.body; 
     const file= req.file; // Access the uploaded file
-    if(!fullname || !email || !phoneNumber|| !bio || !skills){
-      return res.status(400).json({
-        message: "All fields are required",
-        success: false,
-      });
-    }
+    // if(!fullname || !email || !phoneNumber|| !bio || !skills){
+    //   return res.status(400).json({
+    //     message: "All fields are required",
+    //     success: false,
+    //   });
+    // }
    
     //cloudinary upload
-
-    const skillsArray = skills.split(',');
+    let skillsArray = [];
+    if(skills){
+      const skillsArray = skills.split(',');//declaring skillsArray
+    }
+    
     const userId = req.id;//middleware authentication se req.id me user id set krta h
+
     let  user = await User.findById (userId);
     if (!user) {
       return res.status(404).json({
@@ -151,12 +158,23 @@ export const updateProfile = async (req, res) => {
         success: false,
       });
     }
-    // Update user profile
-    user.fullname = fullname;
-    user.email = email;
-    user.phoneNumber = phoneNumber;
-    user.bio = bio;
-    user.skills = skills;
+    // Update database profile
+    if(fullname){
+      user.fullname = fullname;
+    }
+    if(email){
+      user.email = email;
+    }
+    if(phoneNumber){
+      user.phoneNumber = phoneNumber;
+    }
+    
+    if(bio){
+      user.profile.bio = bio;
+    }
+    if(skills){
+      user.profile.skills = skillsArray;
+    }
     
     await user.save();
     

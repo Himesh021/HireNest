@@ -1,0 +1,11 @@
+import express from 'express';
+import authenticateToken from '../middlewares/isAuthenticated.js';
+import { registerCompany, getCompanies, getCompanyById, updateCompany } from '../controllers/company.controller.js';
+const router = express.Router();
+
+router.route('/register').post(registerCompany);
+router.route('/get').get(authenticateToken,getCompanies); 
+router.route('/get/:id').get(authenticateToken,getCompanyById); 
+router.route('/update/:id').put(authenticateToken,updateCompany);
+
+export default router;
