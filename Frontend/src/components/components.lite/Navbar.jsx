@@ -1,10 +1,11 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { Popover,PopoverTrigger,PopoverContent} from "@radix-ui/react-popover";
-import { Avatar, AvatarImage, AvatarFallback } from "../avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "../avatar";
 import { Button } from "../button";
 import {LogOut, User2} from "lucide-react";
 const Navbar = () => {
+  const user=true;
   return (
     <nav className="w-full bg-white shadow-sm border-b">
       <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
@@ -33,7 +34,19 @@ const Navbar = () => {
             <Link to="/">Companies</Link>
           </li>
         </ul>
-        <Popover>
+        { !user ?(
+          <div className="flex items-center gap-4">
+           <Link to="/login">
+           {""}
+           <Button variant="outline">Login</Button>
+           </Link>
+           <Link to="/signup"   >
+           {""}
+           <Button variant="primary">Signup</Button>
+           </Link>
+          </div>
+        ):(
+          <Popover>
           <PopoverTrigger asChild>
            <Avatar className="cursor-pointer">
           <AvatarImage
@@ -71,6 +84,10 @@ const Navbar = () => {
          
           </PopoverContent>
         </Popover>
+        )
+          
+        }
+        
 
         {/* Auth Buttons */}
         {/* <div className="flex items-center gap-4">

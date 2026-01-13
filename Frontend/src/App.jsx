@@ -1,11 +1,30 @@
 import React from "react";
-import { BrowserRouter as Router } from "react-router-dom";
-import Navbar from "./components/ui/components_lite/Navbar";
+import { createBrowserRouter, BrowserRouter as Router } from "react-router-dom";
+import Navbar from "./components/components.lite/Navbar";
+import Home from "./components/components.lite/Home";
+import Login from "./components/authentication/Login";
+import Signup from "./components/authentication/signup";
+import {RouterProvider } from "react-router-dom";  
 
+const appRouter= createBrowserRouter([
+  {
+    path:"/",
+    element:<Home/>
+  },
+  {
+    path:"/login",
+    element:<Login/> 
+  },
+  {
+    path:"/register",
+    element:<Signup/>
+  },
+  
+]); //routes can be added later
 function App() {
   return (
     <Router>
-      <Navbar />
+    <RouterProvider router={appRouter}></RouterProvider>
     </Router>
   );
 }
