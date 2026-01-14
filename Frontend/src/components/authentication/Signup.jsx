@@ -1,59 +1,147 @@
-import React from 'react'
-import Navbar from '../components.lite/Navbar';
-import { Label } from '../ui/label';
-import { Input } from '../ui/input';
-import { RadioGroup} from '../ui/radio-group'; 
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import Navbar from "../components.lite/Navbar";
+import { Label } from "../ui/label";
+import { Input } from "../ui/input";
+import axios from "axios";
+import { USER_API_ENDPOINT } from "../../utils/data";
+const Signup = () => {
+  const [input, setInput] = useState({
+    fullname: "",
+    email: "",
+    password: "",
+    role: "",
+    phoneNumber: "",
+    file: null,
+  });
 
-const signup = () => {
+  const changeEventHandler = (e) => {
+    setInput({ ...input, [e.target.name]: e.target.value });
+  };
+
+  const changeFileHandler = (e) => {
+    setInput({ ...input, file: e.target.files[0] });
+  };
+
+  const submitHandler = async (e) => {
+    e.preventDefault();
+    const formData = new FormData();
+    formData.append("fullname", input.fullname);
+    formData.append("email", input.email);
+    formData.append("password", input.password);
+    formData.append("role", input.role);
+    formData.append("phoneNumber", input.phoneNumber);
+    if (input.file) {
+      formData.append("file", input.file);
+    }
+    try {
+      const res = await axios.post(`${USER_API_ENDPOINT}/register`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+        withCredentials: true,
+      });
+    } catch (error) {}
+  };
+
   return (
     <div>
-<Navbar></Navbar>
-<div className='flex items-center justify-center max-w-7xl mx-auto'>
-  <form action="" className='w-1/2 border-gray-200 rounded-md p-4 my-10'>
-    <h1 className="font-bold text-xl mb-5">Sign Up</h1>
-    <div>
-      <Label>Name</Label>
-      <Input type='text' placeholder='John Doe'></Input>
-    </div>
-     <div>
-      <Label>Email</Label>
-      <Input type='email' placeholder='johndoes@gmail.com'></Input>
-    </div>
-    <div>
-      <Label>Password</Label>
-      <Input type='password' placeholder='********'></Input>
-    </div>
-    <div>
-      <Label>Phone Number</Label>
-      <Input type='tel' placeholder='+1234567890'></Input>
-    </div>
-    <div className='flex items-center justify-between '>
-      <Label>Role</Label>
-      <RadioGroup className="flex items-center gap-4 my-5">
-      <div className="flex items-center gap-3">
-       <Input type="radio"
-         name="role"
-       value="student" 
-       className="cursor-pointer"
-       /> 
-        <Label htmlFor="r1">Student</Label>
-      </div>
-      <div className="flex items-center gap-3">
-  <Input type="radio"
-         name="role"  
-       value="Recruiter" 
-       className="cursor-pointer"
-       />     
-       <Label htmlFor="r2">Recruiter</Label>
-      </div>
-     
-    </RadioGroup>
+      <Navbar />
 
-    </div>
-  </form>
-</div>
-      </div>
-  )
-}
+      <div className="flex items-center justify-center min-h-screen bg-gray-50">
+        <form
+          onSubmit={submitHandler}
+          className="w-full max-w-md bg-white border border-gray-200 rounded-lg shadow-sm p-6"
+        >
+          <h1 className="font-bold text-xl mb-5 text-center text-blue-600">
+            Sign Up
+          </h1>
 
-export default signup;
+          <div className="my-2">
+            <Label>Full Name</Label>
+            <Input
+              name="fullname"
+              value={input.fullname}
+              onChange={changeEventHandler}
+            />
+          </div>
+
+          <div className="my-2">
+            <Label>Email</Label>
+            <Input
+              name="email"
+              value={input.email}
+              onChange={changeEventHandler}
+              placeholder="johndoe@gamil.com"
+            />
+          </div>
+
+          <div className="my-2">
+            <Label>Password</Label>
+            <Input
+              type="password"
+              name="password"
+              value={input.password}
+              onChange={changeEventHandler}
+            />
+          </div>
+
+          <div className="my-2">
+            <Label>Phone Number</Label>
+            <Input
+              name="phoneNumber"
+              value={input.phoneNumber}
+              onChange={changeEventHandler}
+            />
+          </div>
+
+          <div className="my-4">
+            <Label className="block mb-2">Role</Label>
+            <div className="flex gap-6">
+              <label className="flex items-center gap-2">
+                <input
+                  type="radio"
+                  name="role"
+                  value="student"
+                  checked={input.role === "student"}
+                  onChange={changeEventHandler}
+                  className="cursor-pointer"
+                />
+                Student
+              </label>
+              <label className="flex items-center gap-2">
+                <input
+                  type="radio"
+                  name="role"
+                  value="Recruiter"
+                  checked={input.role === "Recruiter"}
+                  onChange={changeEventHandler}
+                  className="cursor-pointer"
+                />
+                Recruiter
+              </label>
+            </div>
+          </div>
+
+          <div className="my-3">
+            <Label>Profile Photo</Label>
+            <Input type="file" accept="image/*" onChange={changeFileHandler} />
+          </div>
+
+          <button className="w-full py-3 text-white bg-black hover:bg-gray-900 rounded-md">
+            Sign Up
+          </button>
+
+          <p className="text-sm text-center mt-4">
+            Already have an account?{" "}
+            <Link to="/login" className="text-green-700 font-semibold">
+              Login
+            </Link>
+          </p>
+        </form>
+      </div>
+    </div>
+  );
+};
+
+export default Signup;

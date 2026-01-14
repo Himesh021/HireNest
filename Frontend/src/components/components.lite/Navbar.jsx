@@ -1,11 +1,11 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { Popover,PopoverTrigger,PopoverContent} from "@radix-ui/react-popover";
-import { Avatar, AvatarFallback, AvatarImage } from "../avatar";
-import { Button } from "../button";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { Button } from "../ui/button";
 import {LogOut, User2} from "lucide-react";
 const Navbar = () => {
-  const user=true;
+  const user=false; //dummy user authentication state
   return (
     <nav className="w-full bg-white shadow-sm border-b">
       <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
@@ -72,11 +72,11 @@ const Navbar = () => {
            </div>
            </div>
            <div className="flex flex-col my-2 text-gray-600">
-            <div className="flex w-fit items-center gap-2 cursor pointer">
+            <div className="flex w-fit items-center gap-2 cursor-pointer">
               <User2></User2>
            <Button variant="link">Profile</Button>
             </div>
-               <div className="flex w-fit items-center gap-2 cursor pointer">
+               <div className="flex w-fit items-center gap-2 cursor-pointer">
                 <LogOut></LogOut> 
               <Button variant="link">Logout</Button>
             </div>

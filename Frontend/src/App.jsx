@@ -3,7 +3,7 @@ import { createBrowserRouter, BrowserRouter as Router } from "react-router-dom";
 import Navbar from "./components/components.lite/Navbar";
 import Home from "./components/components.lite/Home";
 import Login from "./components/authentication/Login";
-import Signup from "./components/authentication/signup";
+import Signup from "./components/authentication/Signup";
 import {RouterProvider } from "react-router-dom";  
 
 const appRouter= createBrowserRouter([
@@ -16,16 +16,16 @@ const appRouter= createBrowserRouter([
     element:<Login/> 
   },
   {
-    path:"/register",
+    path:"/Signup",
     element:<Signup/>
   },
   
 ]); //routes can be added later
 function App() {
   return (
-    <Router>
+    <div>
     <RouterProvider router={appRouter}></RouterProvider>
-    </Router>
+    </div>
   );
 }
 
