@@ -9,7 +9,7 @@ const jobSchema = new mongoose.Schema({
     required: true
   },
  requirements: {
-    type: String,
+    type: [String],
     required: true
   },
   location: {
@@ -24,6 +24,12 @@ const jobSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+
+  experience: {
+    type: String,
+    required: true
+  },
+  
   company: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Company",

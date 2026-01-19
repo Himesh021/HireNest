@@ -10,7 +10,7 @@ export const  registerCompany = async (req, res) => {
       return res.status(400).json({
          message: "Company name is required"});
       }
-      
+  // Check if company already exists
 let company = await Company.findOne({ name: companyName });//point for learning--->
     if (company) {
       return res.status(400).json({message: "Company name already exists" });
@@ -32,7 +32,7 @@ export const getCompanies = async (req, res) => {
   try {
     const userId = req.id;//logein user id
     const companies = await Company.find({ userId });
-    return res.status(200).json({ companies: [], success: true });
+    return res.status(200).json({ companies, success: true });
 
   } catch (error) {
     console.error("Error fetching companies:", error);
@@ -40,7 +40,7 @@ export const getCompanies = async (req, res) => {
   }
 };
 
-//get company by id
+//get company by id– Get single company
 export const getCompanyById = async (req, res) => {
   try {
     const companyId = req.params.id;

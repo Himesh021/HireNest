@@ -1,22 +1,41 @@
 import jwt from "jsonwebtoken";
 
-const isAuthenticated = async (req, res, next) => {
+const isAuthenticated = (req, res, next) => {
   try {
-     const token = req.cookies.token;
-     if (!token) {
-       return res.status(401).json({ message: "No token provided" ,success:false});
-     } 
+    const authHeader = req.headers.authorization;
 
-     const decoded = await jwt.verify(token, process.env.JWT_SECRET);
-     
-     if (!decoded) {
-       return res.status(401).json({ message: "Invalid token" ,success:false});
-     }
-     req.id= decoded.userId;
-     next();
+    console.log("AUTH HEADER:", authHeader);
 
-  }catch(error){
-     return res.status(401).json({ message: "Invalid token"});
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+      return res.status(401).json({
+        message: "Unauthorized: No Bearer token",
+        success: false
+      });
+    }
+
+    const token = authHeader.split(" ")[1];
+
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    console.log("DECODED TOKEN:", decoded);
+
+    req.id = decoded.id || decoded.userId; // handles both cases
+
+    if (!req.id) {
+      return res.status(401).json({
+        message: "Unauthorized: Invalid token payload",
+        success: false
+      });
+    }
+
+    next();
+  } catch (error) {
+    console.error("JWT ERROR:", error.message);
+    return res.status(401).json({
+      message: "Unauthorized",
+      success: false
+    });
   }
 };
+
 export default isAuthenticated;

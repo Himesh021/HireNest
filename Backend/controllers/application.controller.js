@@ -1,8 +1,11 @@
-import { populate } from 'dotenv';
-import {Application} from '../models/application.model.js';
+// import { populate } from 'dotenv';
+import Application from '../models/application.model.js';
+import Job from '../models/job.model.js';
 
+//1.apply to a job
 export const applyToJob = async (req, res) => {
   try {
+    // 1. EXTRACT userId and jobId from request
     const userId = req.id;
     const jobId = req.params.jobId;
     if (!jobId) {
@@ -11,7 +14,7 @@ export const applyToJob = async (req, res) => {
         success: false,
       });
     }
-    // Check if the user has already applied to this job
+    // 2. Check if the user has already applied to this job
     const existingApplication = await Application.findOne({ applicant: userId, job: jobId });
 
     if (existingApplication) {
@@ -20,7 +23,7 @@ export const applyToJob = async (req, res) => {
         success: false,
       });
     }
-    //check if the job exists
+    // 3. Check if the job exists
     const job =await Job.findById(jobId);
     if (!job) {
       return res.status(404).json({
@@ -28,12 +31,17 @@ export const applyToJob = async (req, res) => {
         success: false,
       });
     }
-    // Create a new application
+    // 4. Create a new application
     const newApplication = new Application({
       applicant: userId,
       job: jobId,
     });
-    job.applicatiions.push(newApplication._id);
+
+    // SAVE application in DB
+await newApplication.save();
+
+//link application to job
+    job.applications.push(newApplication._id);
     await job.save();
 
     return res.status(201).json({
@@ -49,13 +57,18 @@ export const applyToJob = async (req, res) => {
   }
 };
 
+//2.get all applied jobs for a user
 export const getAppliedJobs = async (req, res) => {
   try {
+    // Extract userId from request
     const userId = req.id;  
-    const applications = await Application.find({ applicant: userId }).sort({createdAt: -1}).populate({
+    const applications = await Application
+    .find({ applicant: userId })
+    .sort({createdAt: -1})
+    .populate({
       path: "job",
       options: { sort: { createdAt: -1 } }
-    })
+    });
     if(!applications || applications.length===0){
       return res.status(404).json({
         message: "No applied jobs found", 
@@ -75,7 +88,7 @@ export const getAppliedJobs = async (req, res) => {
   }
 };
 
-//get all applications for a job
+//3.get all applications for a job
 export const getApplicants = async (req, res) => {
   try {
      const jobId = req.params.jobId;
@@ -103,11 +116,11 @@ export const getApplicants = async (req, res) => {
   }
 };
 
-//update application status
+//4.update application status
 export const updateStatus = async (req, res) => {
   try {
     const applicationId = req.params.applicationId;
-    const { status } = req.params;
+    const { status } = req.body;
   if(!status){
       return res.status(400).json({
         message: "invalid status",

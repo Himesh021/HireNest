@@ -5,38 +5,18 @@ const companySchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  description: {
-    type: String,
-    required: true
-  },
-  location: {
-    type: String,
-    required: true
-  },
-  logo: {
-    type: String,
-    required: true
-  },
-  website: {
-    type: String,
-    required: true
-  },
-  email: {
-    type: String,
-    required: true
-  },
-  phone_number: {
-    type: String,
-    required: true
-  },
-  userId:{
+  description: String,
+  location: String,
+  logo: String,
+  website: String,
+  email: String,
+  phone_number: String,
+  userId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
     required: true
-  },
-}, {
-    timestamps: true,
-}
-);
+  }
+}, { timestamps: true });
+
 
 export default mongoose.model('Company', companySchema);
