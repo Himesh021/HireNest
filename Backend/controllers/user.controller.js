@@ -2,6 +2,7 @@
 import User from "../models/user.model.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+//register controller
 export const  register = async (req, res) => {
   try {
     const { fullname, email, phoneNumber, password, role } = req.body;
@@ -46,7 +47,9 @@ const existingUser = await User.findOne({
 //login controller
 export const login = async (req, res) => {
   try {
-    const { email, password, role } = req.body;   
+    const { email, password, role } = req.body;  
+    console.log(email, password, role);
+     
     if(!email || !password || !role){
       return res.status(400).json({
          message: "All fields are required",

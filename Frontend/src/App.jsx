@@ -4,27 +4,26 @@ import Navbar from "./components/components.lite/Navbar";
 import Home from "./components/components.lite/Home";
 import Login from "./components/authentication/Login";
 import Signup from "./components/authentication/Signup";
-import {RouterProvider } from "react-router-dom";  
+import { RouterProvider } from "react-router-dom";
 
-const appRouter= createBrowserRouter([
+const appRouter = createBrowserRouter([
   {
-    path:"/",
-    element:<Home/>
+    path: "/",
+    element: <Home />,
   },
   {
-    path:"/login",
-    element:<Login/> 
+    path: "/login",
+    element: <Login />,
   },
   {
-    path:"/Signup",
-    element:<Signup/>
+    path: "/Signup",
+    element: <Signup />,
   },
-  
 ]); //routes can be added later
 function App() {
   return (
     <div>
-    <RouterProvider router={appRouter}></RouterProvider>
+      <RouterProvider router={appRouter}></RouterProvider>
     </div>
   );
 }

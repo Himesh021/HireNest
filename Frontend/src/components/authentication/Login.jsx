@@ -1,9 +1,12 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Navbar from "../components.lite/Navbar";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { RadioGroup } from "../ui/radio-group";
+import { toast } from "sonner";
+import axios from "axios";
+import { USER_API_ENDPOINT } from "@/utils/data.js";
 
 const Login = () => {
   const [input, setInput] = useState({
@@ -11,6 +14,8 @@ const Login = () => {
     password: "",
     role: "",
   });
+
+  const navigate = useNavigate();
   const changeEventHandler = (e) => {
     setInput({
       ...input,
@@ -27,7 +32,27 @@ const Login = () => {
   //api call on submit
   const submitHandler = async (e) => {
     e.preventDefault();
-    console.log(input);
+
+    try {
+      const res = await axios.post(`${USER_API_ENDPOINT}/login`, input, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      });
+      if (res.data.success) {
+        navigate("/");
+        toast.success(res.data.message);
+      }
+    } catch (error) {
+      console.log(error);
+
+      const message = error.response
+        ? error.response.data.message
+        : "An unexpected error occurred. Please try again.";
+
+      toast.error(message);
+    }
   };
 
   return (

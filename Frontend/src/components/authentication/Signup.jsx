@@ -1,10 +1,11 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Navbar from "../components.lite/Navbar";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import axios from "axios";
 import { USER_API_ENDPOINT } from "../../utils/data";
+import { toast } from "sonner";
 const Signup = () => {
   const [input, setInput] = useState({
     fullname: "",
@@ -14,6 +15,8 @@ const Signup = () => {
     phoneNumber: "",
     file: null,
   });
+
+  const navigate = useNavigate();
 
   const changeEventHandler = (e) => {
     setInput({ ...input, [e.target.name]: e.target.value });
@@ -41,7 +44,20 @@ const Signup = () => {
         },
         withCredentials: true,
       });
-    } catch (error) {}
+      if (res.data.success) {
+        navigate("/login");
+        toast.success(res.data.message);
+      }
+    } catch (error) {
+      console.log("Axios error:", error);
+
+      const message =
+        error.response?.data?.message ||
+        error.message ||
+        "Signup failed. Please try again.";
+
+      toast.error(message);
+    }
   };
 
   return (
