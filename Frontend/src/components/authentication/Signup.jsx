@@ -6,6 +6,9 @@ import { Input } from "../ui/input";
 import axios from "axios";
 import { USER_API_ENDPOINT } from "../../utils/data";
 import { toast } from "sonner";
+import { useDispatch, useSelector } from "react-redux";
+import { setLoading } from "@/redux/authSlice";
+
 const Signup = () => {
   const [input, setInput] = useState({
     fullname: "",
@@ -17,7 +20,8 @@ const Signup = () => {
   });
 
   const navigate = useNavigate();
-
+  const dispatch = useDispatch();
+  const { loading } = useSelector((store) => store.auth);
   const changeEventHandler = (e) => {
     setInput({ ...input, [e.target.name]: e.target.value });
   };
@@ -38,6 +42,7 @@ const Signup = () => {
       formData.append("file", input.file);
     }
     try {
+      dispatch(setLoading(true));
       const res = await axios.post(`${USER_API_ENDPOINT}/register`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
@@ -57,6 +62,8 @@ const Signup = () => {
         "Signup failed. Please try again.";
 
       toast.error(message);
+    } finally {
+      dispatch(setLoading(false));
     }
   };
 
@@ -144,9 +151,17 @@ const Signup = () => {
             <Input type="file" accept="image/*" onChange={changeFileHandler} />
           </div>
 
-          <button className="w-full py-3 text-white bg-black hover:bg-gray-900 rounded-md">
-            Sign Up
-          </button>
+          {loading ? (
+            <div className="flex items-center justify-center my-10">
+              <div className="spinner-border text-blue-600" role="status">
+                <span className="sr-only">Loading...</span>
+              </div>
+            </div>
+          ) : (
+            <button className="w-full py-3 text-white bg-black hover:bg-gray-900 rounded-md">
+              Sign Up
+            </button>
+          )}
 
           <p className="text-sm text-center mt-4">
             Already have an account?{" "}
