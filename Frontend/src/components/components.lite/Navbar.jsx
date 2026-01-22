@@ -11,7 +11,7 @@ import { LogOut, User2 } from "lucide-react";
 const Navbar = () => {
   const user = false; //dummy user authentication state
   return (
-    <nav className="w-full bg-white shadow-sm border-b">
+    <nav className="w-full bg-white ">
       <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
         {/* Logo */}
         <Link to="/" className="text-2xl font-bold tracking-tight">
@@ -39,13 +39,19 @@ const Navbar = () => {
         </ul>
         {!user ? (
           <div className="flex items-center gap-4">
-            <Link to="/login">
+            <Link
+              to="/login"
+              className="px-5 py-3 text-sm font-medium text-black-900 hover:text-[#00A264] transition"
+            >
               {""}
-              <Button variant="outline">Login</Button>
+              Login
             </Link>
-            <Link to="/signup">
+            <Link
+              to="/signup"
+              className="px-5 py-2 text-sm font-medium text-white bg-[#000000] rounded-md hover:bg-[#00A264] transition"
+            >
               {""}
-              <Button variant="primary">Signup</Button>
+              Sign up
             </Link>
           </div>
         ) : (

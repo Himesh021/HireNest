@@ -1,6 +1,8 @@
 import React from "react";
 import Navbar from "./Navbar";
 import Header from "./Header";
+import Categories from "./Categories";
+import LatestJobs from "./LatestJobs";
 
 const Home = () => {
   return (
@@ -8,8 +10,8 @@ const Home = () => {
       <Navbar />
       <Header />
       <Categories />
-      {/* <LatestJobs/>
-      <Footer/>  */}
+      <LatestJobs />
+      {/* <Footer/>  */}
     </div>
   );
 };

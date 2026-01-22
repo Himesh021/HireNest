@@ -1,4 +1,12 @@
 import React from "react";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "../ui/carousel";
+import { Button } from "../ui/button";
 
 const Category = [
   "Frontend Developer",
@@ -6,8 +14,8 @@ const Category = [
   "Full Satck Developer",
   "Data Scientist",
   "Devops Engineer",
-  "Machine Learning Engineer",
-  "Artificial Inteligence Engineer",
+  "ML Engineer",
+  "AI Engineer",
   "Cybersecurity Engineer",
   "Product Manager",
   "UX/UI Designer",
@@ -16,7 +24,30 @@ const Category = [
   "Video Editor",
 ];
 const Categories = () => {
-  return <div></div>;
+  return (
+    <div>
+      <div>
+        <h1 className="text-2xl font-bold text-center text-[#000000] mt-10">
+          Explore Job Categories
+        </h1>
+      </div>
+      <Carousel className="w-full max-w-xl mx-auto my-20 ">
+        <CarouselContent>
+          {Category.map((category, index) => {
+            return (
+              <CarouselItem className="md:basis-1/2  lg-basis-1/3">
+                <Button className="bg-black text-white hover:bg-gray-800 px-6 py-3 rounded-full">
+                  {category}
+                </Button>
+              </CarouselItem>
+            );
+          })}
+        </CarouselContent>
+        <CarouselPrevious />
+        <CarouselNext />
+      </Carousel>
+    </div>
+  );
 };
 
 export default Categories;
