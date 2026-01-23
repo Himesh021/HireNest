@@ -16,9 +16,9 @@ const Header = () => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8 }}
       >
-        <span className="px-4 mx-auto py-2 rounded-full bg-gray-100 text-green-600 font-medium">
+        {/* <span className="px-4 mx-auto py-2 rounded-full bg-gray-100 text-green-600 font-medium">
           💼 Upload your CV – let recruiters find you
-        </span>
+        </span> */}
 
         <h2 className="text-5xl font-bold">
           <span className="text-[#00A264]">Find the Job</span> You've <br />
