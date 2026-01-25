@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   Popover,
   PopoverTrigger,
@@ -8,10 +8,16 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Button } from "../ui/button";
 import { LogOut, User2 } from "lucide-react";
+import { useSelector, useDispatch } from "react-redux";
+import { setUser } from "../../redux/authSlice";
+
 const Navbar = () => {
-  const user = false; //dummy user authentication state
+  const { user } = useSelector((store) => store.auth);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   return (
-    <nav className="w-full bg-white ">
+    <nav className="w-full bg-white fixed top-0 left-0 z-50">
       <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
         {/* Logo */}
         <Link to="/" className="text-2xl font-bold tracking-tight">
@@ -81,14 +87,30 @@ const Navbar = () => {
                   </p>
                 </div>
               </div>
-              <div className="flex flex-col my-2 text-gray-600">
-                <div className="flex w-fit items-center gap-2 cursor-pointer">
-                  <User2></User2>
-                  <Button variant="link">Profile</Button>
+              <div className="flex flex-col my-2 text-gray-600 cursor-pointer space-y-2 px-4">
+                <div
+                  className="flex w-fit items-center gap-2 cursor-pointer hover:text-black"
+                  onClick={() => {
+                    console.log("CLICKED PROFILE");
+                    navigate("/profile"); // 🔥 DIRECT ROUTER NAVIGATION
+                  }}
+                >
+                  <User2 />
+                  <span>Profile</span>
                 </div>
+
                 <div className="flex w-fit items-center gap-2 cursor-pointer">
                   <LogOut></LogOut>
-                  <Button variant="link">Logout</Button>
+                  <Button
+                    variant="link"
+                    onClick={() => {
+                      dispatch(setUser(null));
+
+                      navigate("/login");
+                    }}
+                  >
+                    Logout
+                  </Button>
                 </div>
               </div>
             </PopoverContent>
@@ -102,7 +124,7 @@ const Navbar = () => {
             className="px-4 py-2 text-sm font-medium text-black-700 hover:text-[#228B22] transition"
           >
             Login
-          </Link>
+          </Link
 
           <Link
             to="/signup"

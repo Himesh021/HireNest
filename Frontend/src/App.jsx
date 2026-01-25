@@ -1,51 +1,72 @@
 import React from "react";
-import { createBrowserRouter, BrowserRouter as Router } from "react-router-dom";
+import { createBrowserRouter, RouterProvider, Outlet } from "react-router-dom";
 import Navbar from "./components/components.lite/Navbar";
 import Home from "./components/components.lite/Home";
 import Login from "./components/authentication/Login";
 import Signup from "./components/authentication/Signup";
-import { RouterProvider } from "react-router-dom";
 import PrivacyPolicy from "./components/components.lite/PrivacyPolicy";
 import TermsofServices from "./components/components.lite/TermsofServices";
 import Jobs from "./components/components.lite/Jobs";
 import Browse from "./components/components.lite/Browse";
+import Profile from "./components/components.lite/Profile";
+
+// Layout component (Navbar always visible)
+const Layout = () => {
+  return (
+    <>
+      <Navbar />
+      <div className="pt-20">
+        {" "}
+        {/* 🔥 push content below fixed navbar */}
+        <Outlet />
+      </div>
+    </>
+  );
+};
 
 const appRouter = createBrowserRouter([
   {
     path: "/",
-    element: <Home />,
+    element: <Layout />, // 🔥 Everything goes through Layout
+    children: [
+      {
+        index: true, // ✅ HOME FIXED
+        element: <Home />,
+      },
+      {
+        path: "login", // ✅ NO leading /
+        element: <Login />,
+      },
+      {
+        path: "signup",
+        element: <Signup />,
+      },
+      {
+        path: "profile",
+        element: <Profile />, // ✅ PROFILE NOW WORKS FROM HOME TOO
+      },
+      {
+        path: "privacypolicy",
+        element: <PrivacyPolicy />,
+      },
+      {
+        path: "termsofservices",
+        element: <TermsofServices />,
+      },
+      {
+        path: "jobs",
+        element: <Jobs />,
+      },
+      {
+        path: "browse",
+        element: <Browse />,
+      },
+    ],
   },
-  {
-    path: "/login",
-    element: <Login />,
-  },
-  {
-    path: "/Signup",
-    element: <Signup />,
-  },
-  {
-    path: "/PrivacyPolicy",
-    element: <PrivacyPolicy />,
-  },
-  {
-    path: "/TermsofServices",
-    element: <TermsofServices />,
-  },
-  {
-    path: "/Jobs",
-    element: <Jobs />,
-  },
-  {
-    path: "/Browse",
-    element: <Browse />,
-  },
-]); //routes can be added later
+]);
+
 function App() {
-  return (
-    <div>
-      <RouterProvider router={appRouter}></RouterProvider>
-    </div>
-  );
+  return <RouterProvider router={appRouter} />;
 }
 
 export default App;

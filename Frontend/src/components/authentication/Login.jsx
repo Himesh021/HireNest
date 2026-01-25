@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import Navbar from "../components.lite/Navbar";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { RadioGroup } from "../ui/radio-group";
@@ -8,7 +7,7 @@ import { toast } from "sonner";
 import axios from "axios";
 import { USER_API_ENDPOINT } from "@/utils/data.js";
 import { useDispatch, useSelector } from "react-redux";
-import { setLoading } from "@/redux/authSlice.js";
+import { setLoading, setUser } from "@/redux/authSlice.js";
 
 const Login = () => {
   const [input, setInput] = useState({
@@ -46,6 +45,8 @@ const Login = () => {
         withCredentials: true,
       });
       if (res.data.success) {
+        dispatch(setUser(res.data.user));
+
         navigate("/");
         toast.success(res.data.message);
       }
@@ -64,7 +65,6 @@ const Login = () => {
 
   return (
     <div>
-      <Navbar></Navbar>
       <div className="flex items-center justify-center max-w-7xl mx-auto">
         <form
           onSubmit={submitHandler}
@@ -101,8 +101,8 @@ const Login = () => {
                 <Input
                   type="radio"
                   name="role"
-                  value="student"
-                  checked={input.role === "student"}
+                  value="Student"
+                  checked={input.role === "Student"}
                   onChange={changeEventHandler}
                   className="cursor-pointer"
                 />

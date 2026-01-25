@@ -27,7 +27,7 @@ const existingUser = await User.findOne({
     const newUser = new User({
       fullname,
       email,
-      phoneNumber,  
+      phoneNumber,
       password: hashedPassword,
       role,
     });
@@ -35,7 +35,7 @@ const existingUser = await User.findOne({
       message: `Account created successfully for ${fullname}`,
       success: true,
       user: await newUser.save(),
-    });   
+    });
   } catch (error) {
     console.error("Error during user registration:", error);
     res.status(500).json({
@@ -91,7 +91,7 @@ export const login = async (req, res) => {
     user={
       _id: user._id,
       fullname: user.fullname,
-      email: user.email,  
+      email: user.email,
       phoneNumber: user.phoneNumber,
       role: user.role,
       profile: user.profile,
@@ -104,8 +104,9 @@ export const login = async (req, res) => {
     })
     .json({
       message: `Welcome back ${user.fullname}`,
+       user,
       success: true,
-      token,
+     
     });
 
   } catch (error) {
@@ -149,7 +150,7 @@ export const updateProfile = async (req, res) => {
     //cloudinary upload
     let skillsArray = [];
     if(skills){
-      const skillsArray = skills.split(',');//declaring skillsArray
+      skillsArray = skills.split(',');//declaring skillsArray
     }
     
     const userId = req.id;//middleware authentication se req.id me user id set krta h

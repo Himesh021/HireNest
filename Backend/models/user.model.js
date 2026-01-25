@@ -34,17 +34,13 @@ const userSchema = new mongoose.Schema({
       type: String //url to resume file
     },
     resumeOriginalname: {
-      type: String // original name of the resume file             
-    },
-    company: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Company' // Reference to Company model
+      type: String // original name of the resume file
     },
     profilePhoto:{
       type: String, //url to profile photo
       default: "",
     },
-  },
+  }
 },
 {timestamps: true}
 );

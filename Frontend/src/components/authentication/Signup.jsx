@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import Navbar from "../components.lite/Navbar";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import axios from "axios";
@@ -69,8 +68,6 @@ const Signup = () => {
 
   return (
     <div>
-      <Navbar />
-
       <div className="flex items-center justify-center min-h-screen bg-gray-50">
         <form
           onSubmit={submitHandler}
@@ -125,8 +122,8 @@ const Signup = () => {
                 <input
                   type="radio"
                   name="role"
-                  value="student"
-                  checked={input.role === "student"}
+                  value="Student"
+                  checked={input.role === "Student"}
                   onChange={changeEventHandler}
                   className="cursor-pointer"
                 />
