@@ -70,7 +70,7 @@ const Login = () => {
           onSubmit={submitHandler}
           className="w-1/2 border-gray-200 rounded-md p-4 my-10"
         >
-          <h1 className="font-bold text-xl mb-5 text-center text-blue-600">
+          <h1 className="font-bold text-xl mb-5 text-center text-[#00A264]">
             Login
           </h1>
 
@@ -123,15 +123,16 @@ const Login = () => {
           </div>
 
           {loading ? (
-            <div className="flex items-center justify-center my-10">
-              <div className="spinner-border text-blue-600" role="status">
-                <span className="sr-only">Loading...</span>
-              </div>
+            <div className="flex items-center justify-center my-6">
+              <div className="h-5 w-5 animate-spin rounded-full border-2 border-white border-t-transparent" />
+              <span className="ml-2 text-sm text-gray-300">Logging in...</span>
             </div>
           ) : (
             <button
-              className="block w-3/4 py-3 my-3  text-white flex items-center justify-center  max-w-7xl mx-auto 
-    bg-blue-600 hover:bg-blue-800/90 rounded-md "
+              className="block w-3/4 max-w-md mx-auto my-4 py-3 rounded-md 
+               bg-black text-white font-medium 
+               hover:bg-gray-900 transition 
+               flex items-center justify-center"
             >
               Login
             </button>

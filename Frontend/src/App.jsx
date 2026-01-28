@@ -9,6 +9,8 @@ import TermsofServices from "./components/components.lite/TermsofServices";
 import Jobs from "./components/components.lite/Jobs";
 import Browse from "./components/components.lite/Browse";
 import Profile from "./components/components.lite/Profile";
+import Description from "./components/components.lite/Description";
+import EditProfiileModal from "./components/components.lite/EditProfiileModal";
 
 // Layout component (Navbar always visible)
 const Layout = () => {
@@ -42,6 +44,14 @@ const appRouter = createBrowserRouter([
         element: <Signup />,
       },
       {
+        path: "/description/:id",
+        element: <Description />,
+      },
+      {
+        path: "EditProfiileModal",
+        element: <EditProfiileModal />,
+      },
+      {
         path: "profile",
         element: <Profile />, // ✅ PROFILE NOW WORKS FROM HOME TOO
       },
@@ -57,6 +67,7 @@ const appRouter = createBrowserRouter([
         path: "jobs",
         element: <Jobs />,
       },
+
       {
         path: "browse",
         element: <Browse />,

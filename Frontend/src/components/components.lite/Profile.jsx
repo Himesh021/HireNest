@@ -1,135 +1,102 @@
+import { Avatar, AvatarImage } from "@radix-ui/react-avatar";
 import React, { useState } from "react";
-import { useSelector } from "react-redux";
-import { motion } from "framer-motion";
-import { Mail, Phone, Pencil } from "lucide-react";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import profilephoto from "../../assets/profilephoto.jpg";
 import { Button } from "../ui/button";
+import { Contact, Mail, Pen } from "lucide-react";
+import Appliedjobs from "./Appliedjobs";
+import EditProfiileModal from "./EditProfiileModal";
 
+const skills = ["JavaScript", "React", "Node.js", "CSS", "HTML", "Python"];
+
+const isResume = true;
 const Profile = () => {
-  const user = useSelector((store) => store.auth.user);
-  const [editing, setEditing] = useState(false);
-
-  if (!user) {
-    return (
-      <div className="flex justify-center items-center h-[60vh] text-xl font-semibold">
-        Please login to view your profile 🔐
-      </div>
-    );
-  }
-
-  const skills = user?.profile?.skills || [
-    "React",
-    "JavaScript",
-    "HTML",
-    "CSS",
-    "Node.js",
-    "Tailwind CSS",
-  ];
+  const [open, setOpen] = useState(false);
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 40 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6 }}
-      className="max-w-4xl mx-auto mt-10 bg-white shadow-lg rounded-xl p-6"
-    >
-      {/* Top Section */}
-      <div className="flex justify-between items-start border-b pb-6">
-        <div className="flex gap-5 items-center">
-          <Avatar className="w-24 h-24 ring-4 ring-green-200">
-            <AvatarImage
-              src={user?.profile?.photo || "https://github.com/maxleiter.png"}
-              alt="profile"
-            />
-            <AvatarFallback>{user.fullName?.charAt(0)}</AvatarFallback>
-          </Avatar>
-
-          <div>
-            <h2 className="text-2xl font-bold">{user.fullName}</h2>
-            <p className="text-gray-500 mt-1">
-              {user?.profile?.bio || "Lorem ipsum dolor sit amet"}
-            </p>
-
-            <div className="mt-4 space-y-2 text-gray-600">
-              <div className="flex items-center gap-2">
-                <Mail size={18} />
-                <span>{user.email}</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Phone size={18} />
-                <span>{user.phoneNumber}</span>
-              </div>
+    <div>
+      <div className="max-w-4xl mx-auto bg-white border border-gray-200 rounded-2xl my-5 p-8 shadow shadow-gray-400 hover:shadow-[#00A264]">
+        <div className="flex justify-between">
+          <div className="flex items-center gap-5">
+            <Avatar className="cursor-pointer h-24 w-24 rounded-full border border-gray-300 shadow-lg">
+              <AvatarImage
+                className="h-24 w-24 rounded-full border border-gray-300 shadow-lg"
+                src={profilephoto}
+                alt="@maxleiter"
+              />
+            </Avatar>
+            <div>
+              <h1 className="font-medium text-xl">Full Name</h1>
+              <p>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
+              </p>
             </div>
+          </div>
+          <Button
+            onClick={() => setOpen(true)}
+            className="text-right"
+            variant="outline"
+          >
+            <Pen />
+          </Button>
+        </div>
+
+        <div>
+          <div className="flex-items-center gap-3 mt-4">
+            <Mail />
+            <span className="">himeshverma@gmail.com</span>
+          </div>
+          <div className="flex-items-center gap-3 mt-2">
+            <Contact />
+            <span>+917376487641</span>
           </div>
         </div>
 
-        {/* Edit Button */}
-        <Button
-          variant="outline"
-          className="flex items-center gap-2"
-          onClick={() => setEditing(!editing)}
-        >
-          <Pencil size={16} /> Edit
-        </Button>
-      </div>
+        <div>
+          <h1 className="font-semibold mb-2 mt-5">Skills</h1>
 
-      {/* Skills Section */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.3 }}
-        className="mt-6"
-      >
-        <h3 className="font-semibold mb-3">Skills</h3>
-        <div className="flex flex-wrap gap-2">
-          {skills.map((skill, index) => (
-            <motion.span
-              key={index}
-              whileHover={{ scale: 1.05 }}
-              className="px-3 py-1 bg-black text-white rounded-full text-sm shadow"
-            >
-              {skill}
-            </motion.span>
-          ))}
+          <div className="flex flex-wrap gap-2">
+            {skills.length !== 0 ? (
+              skills.map((item, index) => (
+                <span
+                  key={index}
+                  className="bg-black text-white px-3 py-1 rounded-full text-sm"
+                >
+                  {item}
+                </span>
+              ))
+            ) : (
+              <span>No skills added yet.</span>
+            )}
+          </div>
         </div>
-      </motion.div>
 
-      {/* Resume Section */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.4 }}
-        className="mt-8"
-      >
-        <h3 className="font-semibold mb-2">Resume</h3>
-        {user?.profile?.resume ? (
-          <a
-            href={user.profile.resume}
-            download
-            className="text-green-600 font-medium hover:underline"
-          >
-            Download
-          </a>
-        ) : (
-          <p className="text-gray-400">No resume uploaded</p>
-        )}
-      </motion.div>
+        <div>
+          <div className="grid w-full max-w-sm items-center gap-1.5">
+            <label className="text-md font-bold mt-5">Upload Resume</label>
 
-      {/* Edit Mode Placeholder */}
-      {editing && (
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="mt-8 p-4 border rounded-lg bg-gray-50"
-        >
-          <p className="font-medium mb-2">Edit Profile (Coming Soon 🔧)</p>
-          <p className="text-sm text-gray-500">
-            Next step: connect this form with your backend `/profile/update`
-            API.
-          </p>
-        </motion.div>
-      )}
-    </motion.div>
+            <div>
+              {isResume ? (
+                <Button
+                  className=" bg-[#00A264] text-white cursor-pointer"
+                  target="_blank"
+                  href={"http://resume.com"}
+                  variant="outline"
+                >
+                  Download
+                </Button>
+              ) : (
+                <span>No resume uploaded yet.</span>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="max-w-4xl mx-auto bg-white rounded-2xl">
+        <h1 className="text-lg my-5  font-bold">Applied Jobs</h1>
+        <Appliedjobs />
+      </div>
+      <EditProfiileModal open={open} setOpen={setOpen} />
+    </div>
   );
 };
 

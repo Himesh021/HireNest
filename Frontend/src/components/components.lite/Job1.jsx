@@ -2,10 +2,12 @@ import { Bookmark, BookmarkCheck } from "lucide-react";
 import React, { useState } from "react";
 import { Button } from "../ui/button";
 import { Badge } from "../ui/badge";
+import { useNavigate } from "react-router-dom";
 
 const JobCard = () => {
   const [saved, setSaved] = useState(false);
-
+  const naviagate = useNavigate();
+  const jobId = 1; // Example job ID
   return (
     <div
       className="p-5 rounded-xl shadow-md bg-white border border-gray-200 cursor-pointer 
@@ -63,8 +65,10 @@ const JobCard = () => {
       <div className="flex gap-3 pt-3">
         {/* View Details */}
         <Button
-          variant="outline"
-          className="w-1/2 border-black text-black hover:bg-black hover:text-white"
+          onClick={() => {
+            naviagate(`/description/${jobId}`);
+          }}
+          className="w-1/2 bg-black hover:bg-gray-800 text-white"
         >
           View Details
         </Button>
