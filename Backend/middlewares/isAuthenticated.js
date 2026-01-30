@@ -2,18 +2,24 @@ import jwt from "jsonwebtoken";
 
 const isAuthenticated = (req, res, next) => {
   try {
+    let token;
     const authHeader = req.headers.authorization;
 
     console.log("AUTH HEADER:", authHeader);
+    console.log("COOKIES:", req.cookies);
 
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    if (authHeader && authHeader.startsWith("Bearer ")) {
+      token = authHeader.split(" ")[1];
+    } else if (req.cookies && req.cookies.token) {
+      token = req.cookies.token;
+    } else {
       return res.status(401).json({
-        message: "Unauthorized: No Bearer token",
+        message: "Unauthorized: No Bearer token or cookie",
         success: false
       });
     }
 
-    const token = authHeader.split(" ")[1];
+    console.log("TOKEN:", token);
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 

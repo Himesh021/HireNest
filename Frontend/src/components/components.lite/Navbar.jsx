@@ -10,11 +10,33 @@ import { Button } from "../ui/button";
 import { LogOut, User2 } from "lucide-react";
 import { useSelector, useDispatch } from "react-redux";
 import { setUser } from "../../redux/authSlice";
+import { toast } from "sonner";
+import axios from "axios";
+import { USER_API_ENDPOINT } from "@/utils/data";
 
 const Navbar = () => {
   const { user } = useSelector((store) => store.auth);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  const logoutHandler = async () => {
+    try {
+      const response = await axios.post(`${USER_API_ENDPOINT}/logout`, {
+        withCredentials: true,
+      });
+
+      if (response.data.success) {
+        dispatch(setUser(null));
+        navigate("/");
+        toast.success("Logout out successfully");
+      } else {
+        toast.error("Failed to log out");
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error(error.response.data.message);
+    }
+  };
 
   return (
     <nav className="w-full bg-white fixed top-0 left-0 z-50">
@@ -72,45 +94,60 @@ const Navbar = () => {
               </Avatar>
             </PopoverTrigger>
             <PopoverContent className="w-80">
-              <div className="flex  items-center gap-4 space-x-4 p-4">
-                <Avatar className="cursor-pointer">
-                  <AvatarImage
-                    src="https://github.com/maxleiter.png"
-                    alt="@maxleiter"
-                  />
-                  <AvatarFallback>LR</AvatarFallback>
-                </Avatar>
-                <div>
-                  <h3 className="font-medium">Himesh verma</h3>
-                  <p className="text-sm text-muted-foreground">
-                    himeshverma@example.com
-                  </p>
-                </div>
-              </div>
-              <div className="flex flex-col my-2 text-gray-600 cursor-pointer space-y-2 px-4">
-                <div
-                  className="flex w-fit items-center gap-2 cursor-pointer hover:text-black"
-                  onClick={() => {
-                    console.log("CLICKED PROFILE");
-                    navigate("/profile"); // 🔥 DIRECT ROUTER NAVIGATION
-                  }}
-                >
-                  <User2 />
-                  <span>Profile</span>
+              <div
+                className="absolute right-4 top-14 w-64 rounded-xl 
+                    bg-black/95 text-gray-100
+                    border border-white/10 
+                    shadow-2xl backdrop-blur-md overflow-hidden"
+              >
+                {/* User Info */}
+                <div className="flex items-center gap-4 p-4 border-b border-white/10">
+                  <Avatar className="h-10 w-10 cursor-pointer ring-1 ring-white/20">
+                    <AvatarImage
+                      src="https://github.com/maxleiter.png"
+                      alt="Himesh Verma"
+                    />
+                    <AvatarFallback className="bg-white/10 text-white">
+                      HV
+                    </AvatarFallback>
+                  </Avatar>
+
+                  <div className="leading-tight">
+                    <h3 className="font-semibold text-sm tracking-wide">
+                      Himesh Verma
+                    </h3>
+                    <p className="text-xs text-white/60 truncate">
+                      himeshverma@example.com
+                    </p>
+                  </div>
                 </div>
 
-                <div className="flex w-fit items-center gap-2 cursor-pointer">
-                  <LogOut></LogOut>
-                  <Button
-                    variant="link"
-                    onClick={() => {
-                      dispatch(setUser(null));
-
-                      navigate("/login");
-                    }}
+                {/* Actions */}
+                <div className="flex flex-col py-2 text-sm">
+                  {/* Profile */}
+                  <div
+                    className="flex items-center gap-3 px-4 py-2 cursor-pointer
+                     text-white/80 hover:text-white
+                     hover:bg-white/10 transition"
+                    onClick={() => navigate("/profile")}
                   >
-                    Logout
-                  </Button>
+                    <User2 size={18} />
+                    <span>Profile</span>
+                  </div>
+
+                  {/* Divider */}
+                  <div className="my-1 h-px bg-white/10" />
+
+                  {/* Logout */}
+                  <div
+                    className="flex items-center gap-3 px-4 py-2 cursor-pointer
+                     text-white/70 hover:text-red-400
+                     hover:bg-red-500/10 transition"
+                    onClick={logoutHandler}
+                  >
+                    <LogOut size={18} />
+                    <span>Logout</span>
+                  </div>
                 </div>
               </div>
             </PopoverContent>

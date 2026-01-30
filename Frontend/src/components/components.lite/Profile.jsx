@@ -5,12 +5,14 @@ import { Button } from "../ui/button";
 import { Contact, Mail, Pen } from "lucide-react";
 import Appliedjobs from "./Appliedjobs";
 import EditProfiileModal from "./EditProfiileModal";
+import { useSelector } from "react-redux";
 
-const skills = ["JavaScript", "React", "Node.js", "CSS", "HTML", "Python"];
+// const skills = ["JavaScript", "React", "Node.js", "CSS", "HTML", "Python"];
 
 const isResume = true;
 const Profile = () => {
   const [open, setOpen] = useState(false);
+  const { user } = useSelector((store) => store.auth);
 
   return (
     <div>
@@ -25,10 +27,8 @@ const Profile = () => {
               />
             </Avatar>
             <div>
-              <h1 className="font-medium text-xl">Full Name</h1>
-              <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
-              </p>
+              <h1 className="font-medium text-xl">{user?.fullname}</h1>
+              <p>{user?.profile?.bio}</p>
             </div>
           </div>
           <Button
@@ -43,11 +43,15 @@ const Profile = () => {
         <div>
           <div className="flex-items-center gap-3 mt-4">
             <Mail />
-            <span className="">himeshverma@gmail.com</span>
+            <span className="">
+              <a href={"mailto:" + user?.email}>{user?.email}</a>
+            </span>
           </div>
           <div className="flex-items-center gap-3 mt-2">
             <Contact />
-            <span>+917376487641</span>
+            <span>
+              <a href={`tel:${user?.phoneNumber}`}>{user?.phoneNumber}</a>
+            </span>
           </div>
         </div>
 
@@ -55,8 +59,8 @@ const Profile = () => {
           <h1 className="font-semibold mb-2 mt-5">Skills</h1>
 
           <div className="flex flex-wrap gap-2">
-            {skills.length !== 0 ? (
-              skills.map((item, index) => (
+            {user?.profile?.skills.length !== 0 ? (
+              user?.profile?.skills.map((item, index) => (
                 <span
                   key={index}
                   className="bg-black text-white px-3 py-1 rounded-full text-sm"
@@ -79,7 +83,7 @@ const Profile = () => {
                 <Button
                   className=" bg-[#00A264] text-white cursor-pointer"
                   target="_blank"
-                  href={"http://resume.com"}
+                  href={user?.profile?.resume}
                   variant="outline"
                 >
                   Download

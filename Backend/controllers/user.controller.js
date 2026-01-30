@@ -2,6 +2,8 @@
 import User from "../models/user.model.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import cloudinary from "../utils/cloud.js";
+import getDataUri from "../utils/datauri.js";
 //register controller
 export const  register = async (req, res) => {
   try {
@@ -12,6 +14,9 @@ export const  register = async (req, res) => {
         success: false,
       });
     }
+    const file = req.file; 
+    const fileUri = getDataUri(file);
+    const cloudResponse = await cloudinary.uploader.upload(fileUri.content);
 const existingUser = await User.findOne({
   $or: [{ email }, { phoneNumber }]
 });
@@ -30,6 +35,9 @@ const existingUser = await User.findOne({
       phoneNumber,
       password: hashedPassword,
       role,
+      profile: {
+       profilePhoto:cloudResponse.secure_url,
+      },   
     });
     return res.status(201).json({
       message: `Account created successfully for ${fullname}`,
@@ -148,6 +156,16 @@ export const updateProfile = async (req, res) => {
     // }
    
     //cloudinary upload
+    let cloudinaryResponse;
+    if(file){
+      try {
+        const fileUri = getDataUri(file);
+        cloudinaryResponse=await cloudinary.uploader.upload(fileUri.content);
+      } catch (cloudinaryError) {
+        console.log("Cloudinary upload failed:", cloudinaryError.message);
+        // Continue without file upload if Cloudinary fails
+      }
+    }
     let skillsArray = [];
     if(skills){
       skillsArray = skills.split(',');//declaring skillsArray
@@ -161,6 +179,10 @@ export const updateProfile = async (req, res) => {
         message: "User not found",
         success: false,
       });
+    }
+    // Initialize profile if it doesn't exist
+    if (!user.profile) {
+      user.profile = {};
     }
     // Update database profile
     if(fullname){
@@ -178,6 +200,12 @@ export const updateProfile = async (req, res) => {
     }
     if(skills){
       user.profile.skills = skillsArray;
+    }
+
+    //resume
+    if(cloudinaryResponse){
+      user.profile.resume = cloudinaryResponse.secure_url;
+      user.profile.resumeOriginalname=file.originalname;
     }
     
     await user.save();

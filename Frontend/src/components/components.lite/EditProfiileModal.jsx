@@ -12,10 +12,13 @@ import { useSelector } from "react-redux";
 import { USER_API_ENDPOINT } from "@/utils/data";
 import { toast } from "sonner";
 import axios from "axios";
+import { useDispatch } from "react-redux";
+import { setUser } from "@/redux/authSlice";
 
 const EditProfiileModal = ({ open, setOpen }) => {
   const [loading, setLoading] = useState(false);
-  const { user } = useSelector((store) => store.auth);
+  const { user, token } = useSelector((store) => store.auth);
+  const dispatch = useDispatch();
 
   const [input, setInput] = useState({
     name: user?.fullname || "",
@@ -35,40 +38,38 @@ const EditProfiileModal = ({ open, setOpen }) => {
 
   const submitHandler = async (e) => {
     e.preventDefault();
-    const formData = new FormData();
-    formData.append("name", input.name);
-    formData.append("email", input.email);
-    formData.append("phone", input.phone);
-    formData.append("bio", input.bio);
-    formData.append("skills", input.skills);
+    setLoading(true); // ✅ ADD THIS
 
-    if (input.file) {
-      formData.append("file", input.file);
-    }
     try {
-      const token = localStorage.getItem("token");
+      const formData = new FormData();
+      formData.append("fullname", input.name);
+      formData.append("email", input.email);
+      formData.append("phoneNumber", input.phone);
+      formData.append("bio", input.bio);
+      formData.append("skills", input.skills);
+
+      if (input.file) {
+        formData.append("file", input.file);
+      }
 
       const res = await axios.post(
         `${USER_API_ENDPOINT}/profile/update`,
         formData,
         {
-          headers: {
-            "Content-Type": "multipart/form-data",
-            Authorization: `Bearer ${token}`,
-          },
           withCredentials: true,
         },
       );
 
       if (res.data.success) {
-        dispatchEvent(setUser(res.data.user));
+        dispatch(setUser(res.data.user));
         toast.success(res.data.message);
+        setOpen(false); // optional but good UX
       }
     } catch (error) {
-      console.log(error);
       toast.error(error?.response?.data?.message || "Something went wrong");
+    } finally {
+      setLoading(false); // ✅ ADD THIS
     }
-    console.log(input);
   };
 
   const FileChangehandler = (e) => {

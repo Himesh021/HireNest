@@ -1,6 +1,6 @@
 import express from 'express';
 import { login,logout, updateProfile,register } from '../controllers/user.controller.js'; 
-import authenticatedToken from '../middlewares/isAuthenticated.js';
+import isAuthenticated from '../middlewares/isAuthenticated.js';
 import { singleUpload } from '../middlewares/multer.js';
 
 const router = express.Router();
@@ -8,6 +8,6 @@ const router = express.Router();
 router.route('/register').post(singleUpload,register);// singleUpload middleware added here
 router.route('/login').post(login); 
 router.route('/logout').post(logout); 
-router.route('/profile/update').post(authenticatedToken,updateProfile);
+router.route('/profile/update').post(isAuthenticated, singleUpload, updateProfile);
 
 export default router;
