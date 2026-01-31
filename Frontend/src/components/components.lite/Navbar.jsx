@@ -86,11 +86,14 @@ const Navbar = () => {
           <Popover>
             <PopoverTrigger asChild>
               <Avatar className="cursor-pointer">
-                <AvatarImage
-                  src="https://github.com/maxleiter.png"
-                  alt="@maxleiter"
-                />
-                <AvatarFallback>LR</AvatarFallback>
+                <AvatarImage src={user?.profile?.profilePhoto} alt="profile" />
+                <AvatarFallback>
+                  {user?.fullname
+                    ?.split(" ")
+                    .map((n) => n[0])
+                    .join("")
+                    .toUpperCase()}
+                </AvatarFallback>
               </Avatar>
             </PopoverTrigger>
             <PopoverContent className="w-80">
@@ -104,20 +107,24 @@ const Navbar = () => {
                 <div className="flex items-center gap-4 p-4 border-b border-white/10">
                   <Avatar className="h-10 w-10 cursor-pointer ring-1 ring-white/20">
                     <AvatarImage
-                      src="https://github.com/maxleiter.png"
+                      src={user?.profile?.profilePhoto}
                       alt="Himesh Verma"
                     />
                     <AvatarFallback className="bg-white/10 text-white">
-                      HV
+                      {user?.fullname
+                        ?.split(" ")
+                        .map((n) => n[0])
+                        .join("")
+                        .toUpperCase()}
                     </AvatarFallback>
                   </Avatar>
 
                   <div className="leading-tight">
                     <h3 className="font-semibold text-sm tracking-wide">
-                      Himesh Verma
+                      {user?.fullname}
                     </h3>
                     <p className="text-xs text-white/60 truncate">
-                      himeshverma@example.com
+                      {user?.email}
                     </p>
                   </div>
                 </div>

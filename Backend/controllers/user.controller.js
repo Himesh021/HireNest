@@ -7,6 +7,8 @@ import getDataUri from "../utils/datauri.js";
 //register controller
 export const  register = async (req, res) => {
   try {
+    console.log("req.body:", req.body);
+    console.log("req.file:", req.file);
     const { fullname, email, phoneNumber, password, role } = req.body;
     if(!fullname || !email || !phoneNumber || !password || !role){
       return res.status(400).json({
@@ -14,12 +16,27 @@ export const  register = async (req, res) => {
         success: false,
       });
     }
-    const file = req.file; 
-    const fileUri = getDataUri(file);
-    const cloudResponse = await cloudinary.uploader.upload(fileUri.content);
-const existingUser = await User.findOne({
-  $or: [{ email }, { phoneNumber }]
-});
+    if(role !== "Student" && role !== "Recruiter"){
+      return res.status(400).json({
+         message: "Invalid role selected",
+        success: false,
+      });
+    }
+    const file = req.file;
+    let profilePhotoUrl = "";
+    if (file) {
+      try {
+        const fileUri = getDataUri(file);
+        const cloudResponse = await cloudinary.uploader.upload(fileUri.content);
+        profilePhotoUrl = cloudResponse.secure_url;
+      } catch (uploadError) {
+        console.error("File upload failed:", uploadError.message);
+        // Continue without file upload if it fails
+      }
+    }
+    const existingUser = await User.findOne({
+      $or: [{ email }, { phoneNumber }]
+    });
 //point for learning--->
     if (existingUser) {
       return res.status(400).json({
@@ -36,8 +53,9 @@ const existingUser = await User.findOne({
       password: hashedPassword,
       role,
       profile: {
-       profilePhoto:cloudResponse.secure_url,
-      },   
+       profilePhoto: profilePhotoUrl,
+      },
+      
     });
     return res.status(201).json({
       message: `Account created successfully for ${fullname}`,
