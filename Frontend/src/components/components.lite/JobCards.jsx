@@ -1,33 +1,47 @@
 import React from "react";
 import { Badge } from "../ui/badge";
 
-const JobCards = () => {
+const JobCards = ({ job }) => {
+  if (!job) return null;
+
   return (
-    <div className="p-5 rounded-md shadow-xl bg-white border border-green-200 cursor-pointer hover:shadow-2xl hover:shadow-green-200 hover:p-3">
-      <div>
-        <h1 className="text-lg font-medium">Company Name</h1>
-        <p className="text-sm text-gray-600">India</p>
+    <div className="bg-white border border-gray-200 rounded-xl p-5 transition-all duration-300 hover:shadow-xl hover:border-green-300 cursor-pointer">
+      {/* Top section */}
+      <div className="flex justify-between items-start">
+        <div>
+          <p className="text-sm font-semibold text-gray-800">{job.location}</p>
+
+          <h1 className="text-lg font-semibold text-gray-800">
+            {job.company?.name}
+          </h1>
+        </div>
+
+        <Badge variant="outline" className="text-green-700 border-green-400">
+          {job.jobType}
+        </Badge>
       </div>
 
-      <div>
-        <h2 className="font-bold text-lg my-2">Job Title</h2>
-        <p className="text-sm text-gray-600">
-          Job description goes here. This is a brief overview of the job role
-          and responsibilities.
-        </p>
-      </div>
-      <div>
-        <Badge className={" text-black font-bold "} variant={"ghost"}>
-          10 position
+      {/* Job title */}
+      <h2 className="mt-3 text-xl font-bold text-gray-900">{job.title}</h2>
+
+      {/* Description */}
+      <p className="mt-2 text-sm text-gray-600 line-clamp-2">
+        {job.description}
+      </p>
+
+      {/* Badges */}
+      <div className="mt-4 flex flex-wrap gap-2">
+        <Badge variant="ghost" className="text-black font-bold">
+          {job.position} positions
         </Badge>
-        <Badge className={" text-black font-bold "} variant={"ghost"}>
-          20 LPA
+        <Badge variant="ghost" className="text-black font-bold">
+          {job.salary} LPA
         </Badge>
-        <Badge className={" text-black font-bold "} variant={"ghost"}>
-          Remote
+        <Badge variant="ghost" className="text-black font-bold">
+          {job.location}
         </Badge>
-        <Badge className={" text-black font-bold "} variant={"ghost"}>
-          Full Time
+        <Badge variant="ghost" className="text-black font-bold">
+          {job.jobType}
         </Badge>
       </div>
     </div>

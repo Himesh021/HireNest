@@ -48,22 +48,35 @@ const Navbar = () => {
 
         {/* Nav Links */}
         <ul className="flex items-center gap-8 text-black-600 font-medium">
-          <li className="hover:text-[#228B22] transition">
-            <Link to="/">Home</Link>
-          </li>
-          <li className="hover:text-[#228B22] transition">
-            <Link to="/">Community</Link>
-          </li>
+          {user && user.role === "Recruiter" ? (
+            <>
+              <li className="hover:text-[#228B22] transition">
+                <Link to={"/admin/companies"}>Companies</Link>
+              </li>
+              <li className="hover:text-[#228B22] transition">
+                <Link to={"/admin/jobs"}>Jobs</Link>
+              </li>
+            </>
+          ) : (
+            <>
+              <li className="hover:text-[#228B22] transition">
+                <Link to="/">Home</Link>
+              </li>
+              <li className="hover:text-[#228B22] transition">
+                <Link to="/">Community</Link>
+              </li>
 
-          <li className="hover:text-[#228B22] transition">
-            <Link to="/browse">Browse</Link>
-          </li>
-          <li className="hover:text-[#228B22] transition">
-            <Link to="/jobs">Jobs</Link>
-          </li>
-          <li className="hover:text-[#228B22] transition">
-            <Link to="/">Companies</Link>
-          </li>
+              <li className="hover:text-[#228B22] transition">
+                <Link to="/browse">Browse</Link>
+              </li>
+              <li className="hover:text-[#228B22] transition">
+                <Link to="/jobs">Jobs</Link>
+              </li>
+              <li className="hover:text-[#228B22] transition">
+                <Link to="/">Companies</Link>
+              </li>
+            </>
+          )}
         </ul>
         {!user ? (
           <div className="flex items-center gap-4">
@@ -132,15 +145,17 @@ const Navbar = () => {
                 {/* Actions */}
                 <div className="flex flex-col py-2 text-sm">
                   {/* Profile */}
-                  <div
-                    className="flex items-center gap-3 px-4 py-2 cursor-pointer
+                  {user && user.role === "Student" && (
+                    <div
+                      className="flex items-center gap-3 px-4 py-2 cursor-pointer
                      text-white/80 hover:text-white
                      hover:bg-white/10 transition"
-                    onClick={() => navigate("/profile")}
-                  >
-                    <User2 size={18} />
-                    <span>Profile</span>
-                  </div>
+                      onClick={() => navigate("/profile")}
+                    >
+                      <User2 size={18} />
+                      <span>Profile</span>
+                    </div>
+                  )}
 
                   {/* Divider */}
                   <div className="my-1 h-px bg-white/10" />

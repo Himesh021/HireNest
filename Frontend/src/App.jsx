@@ -11,6 +11,9 @@ import Browse from "./components/components.lite/Browse";
 import Profile from "./components/components.lite/Profile";
 import Description from "./components/components.lite/Description";
 import EditProfiileModal from "./components/components.lite/EditProfiileModal";
+import Companies from "./components/admincomponent/Companies";
+import CompanySetup from "./components/admincomponent/CompanySetup";
+import CompanyCreate from "./components/admincomponent/CompanyCreate";
 
 // Layout component (Navbar always visible)
 const Layout = () => {
@@ -71,6 +74,19 @@ const appRouter = createBrowserRouter([
       {
         path: "browse",
         element: <Browse />,
+      },
+
+      {
+        path: "/admin/companies",
+        element: <Companies />,
+      },
+      {
+        path: "/admin/companies/create",
+        element: <CompanyCreate />,
+      },
+      {
+        path: "/admin/companies/:id",
+        element: <CompanySetup />,
       },
     ],
   },

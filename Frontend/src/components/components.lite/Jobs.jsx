@@ -1,31 +1,19 @@
 import React from "react";
-import Filter from "./Filter";
+import { useSelector } from "react-redux";
 import Job1 from "./Job1";
 
-const jobsArray = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-
 const Jobs = () => {
+  const alljobs = useSelector((store) => store.jobs?.alljobs || []);
+
+  if (!alljobs.length) {
+    return <p className="text-center mt-6">No jobs found</p>;
+  }
+
   return (
-    <div>
-      <div className="max-w-7xl mx-auto mt-5">
-        <div className="flex gap-5">
-          <div className="w-20%">
-            {/* Filter Card */}
-            <Filter />
-          </div>
-          {jobsArray.length <= 0 ? (
-            <span className="">Job not found</span>
-          ) : (
-            <div className="flex-1 h-[88vh] overflow-y-auto pb-5">
-              <div className="grid grid-cols-3 gap-4">
-                {jobsArray.map((job, index) => (
-                  <Job1 key={index} />
-                ))}
-              </div>
-            </div>
-          )}
-        </div>
-      </div>
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {alljobs.map((job) => (
+        <Job1 key={job._id} job={job} />
+      ))}
     </div>
   );
 };

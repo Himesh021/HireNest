@@ -4,7 +4,7 @@ import { applyToJob,getApplicants, getAppliedJobs, updateStatus } from '../contr
 
 const router = express.Router();
 
-router.route('/apply/:id').get(authenticateToken,applyToJob);
+router.route('/apply/:jobId').post(authenticateToken,applyToJob);
 router.route('/get').get(authenticateToken,getAppliedJobs); 
 router.route('/:id/applicants').get(authenticateToken,getApplicants); 
 router.route('/status/:id/update').post(authenticateToken,updateStatus);
