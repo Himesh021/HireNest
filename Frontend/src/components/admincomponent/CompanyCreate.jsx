@@ -5,7 +5,9 @@ import { useNavigate } from "react-router-dom";
 import { COMPANY_API_ENDPOINT } from "@/utils/data";
 import { useDispatch } from "react-redux";
 import { setSingleCompany } from "@/redux/companyslice";
-import { Input } from "postcss";
+import { Input } from "../ui/input";
+import axios from "axios";
+import { toast } from "sonner";
 
 const CompanyCreate = () => {
   const [CompanyName, setCompanyName] = useState();
@@ -23,7 +25,7 @@ const CompanyCreate = () => {
           headers: {
             "Content-Type": "application/json",
           },
-          withCrendentials: true,
+          withCredentials: true,
         },
       );
       console.log(res.data);
@@ -40,7 +42,7 @@ const CompanyCreate = () => {
 
   return (
     <div>
-      <div className="max-w-4xl" mx-auto>
+      <div className="max-w-4xl mx-auto">
         <div className="my-10">
           <h1 className="font-bold text-2xl">Company Name</h1>
           <p className="text-gray-600">Company Description</p>
