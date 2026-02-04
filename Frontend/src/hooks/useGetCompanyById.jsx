@@ -21,6 +21,10 @@ const useGetCompanyById = (companyId) => {
             withCredentials: true,
           },
         );
+
+        console.log(response.data.company);
+        console.log("API Response:", response.data);
+        console.log("Fetched data:", response.data);
         if (response.data.success) {
           dispatch(setSingleCompany(response.data.company));
         }

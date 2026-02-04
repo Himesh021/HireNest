@@ -14,6 +14,7 @@ import EditProfiileModal from "./components/components.lite/EditProfiileModal";
 import Companies from "./components/admincomponent/Companies";
 import CompanySetup from "./components/admincomponent/CompanySetup";
 import CompanyCreate from "./components/admincomponent/CompanyCreate";
+import PostJob from "./components/admincomponent/PostJob";
 
 // Layout component (Navbar always visible)
 const Layout = () => {
@@ -87,6 +88,14 @@ const appRouter = createBrowserRouter([
       {
         path: "/admin/companies/:id",
         element: <CompanySetup />,
+      },
+      {
+        path: "/admin/jobs",
+        element: <AdminJobs />,
+      },
+      {
+        path: "/admin/jobs/create",
+        element: <PostJob />,
       },
     ],
   },
