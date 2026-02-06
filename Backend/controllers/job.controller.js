@@ -1,3 +1,4 @@
+import { populate } from "dotenv";
 import Job from "../models/job.model.js";
 
 //1.post a job
@@ -128,7 +129,10 @@ export const getJobsById = async (req, res) => {
 export const getAdminJobs = async (req, res) => {
   try {
        const adminId=req.id;
-    const jobs = await Job.find({ created_by: adminId });
+    const jobs = await Job.find({ created_by: adminId }). populate ({
+      path:"company",
+      sort:{ createdAt: -1},
+    });
     if (jobs.length === 0) {
       return res.status(404).json({
         message: "No jobs found for this admin",  

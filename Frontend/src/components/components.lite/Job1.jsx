@@ -51,20 +51,27 @@ const Job1 = ({ job }) => {
       </div>
 
       {/* Company + Location */}
-      <div>
-        <p
-          className={`text-sm ${
-            job.location === "Remote"
-              ? "font-bold text-green-700"
-              : "font-medium text-gray-700"
-          }`}
-        >
-          {job.location}
-        </p>
+      <div className="flex items-center gap-2 my-2">
+        <Button className="p-6" variant="outline" size="icon">
+          <Avatar>
+            <AvatarImage src={job?.company?.logo} />
+          </Avatar>
+        </Button>
+        <div>
+          <p
+            className={`text-sm ${
+              job.location === "Remote"
+                ? "font-bold text-green-700"
+                : "font-medium text-gray-700"
+            }`}
+          >
+            {job.location}
+          </p>
 
-        <h1 className="text-lg font-semibold text-gray-800">
-          {job.company?.name}
-        </h1>
+          <h1 className="text-lg font-semibold text-gray-800">
+            {job.company?.name}
+          </h1>
+        </div>
       </div>
 
       {/* Job Title + Description */}

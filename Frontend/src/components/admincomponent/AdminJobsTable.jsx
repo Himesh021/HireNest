@@ -40,8 +40,8 @@ const AdminJobsTable = () => {
     setFilterJobs(filteredJobs);
   }, [allAdminJobs, searchJobByText]);
 
-  console.log("COMPANIES", companies);
-  if (!companies) {
+  console.log("JOBS", allAdminJobs);
+  if (!allAdminJobs) {
     return <div>Loading...</div>;
   }
 

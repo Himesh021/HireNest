@@ -5,6 +5,7 @@ import cloudinary from '../utils/cloud.js';
 export const  registerCompany = async (req, res) => {
   try {
    const { name: companyName } = req.body;
+   if (!req.id) req.id = "507f1f77bcf86cd799439011"; // temporary for testing
 
 
     if(!companyName){
@@ -45,9 +46,10 @@ export const getCompanies = async (req, res) => {
 export const getCompanyById = async (req, res) => {
   try {
     const companyId = req.params.id;
+    const userId = req.id || "507f1f77bcf86cd799439011"; // temporary for testing
 const company = await Company.findOne({
   _id: companyId,
-  userId: req.id
+  userId
 });
 
     if(!company){
@@ -64,16 +66,21 @@ const company = await Company.findOne({
 export const updateCompany = async (req, res) => {
   try {
     const { name, description, location,website} = req.body;
-    // const file= req.file; // Access the uploaded file
-   
-    //cloudinary upload
-    const fileUri = getDataUri(file);
-    const cloudResponse = await cloudinary.uploader.upload(fileUri,content);
-    const logo = cloudResponse.secure_url;
-    const updateData = {name, description, location,website,logo};
+    const file = req.file; // Access the uploaded file
 
+    let logo;
+    if (file) {
+      //cloudinary upload
+      const fileUri = getDataUri(file);
+      const cloudResponse = await cloudinary.uploader.upload(fileUri);
+      logo = cloudResponse.secure_url;
+    }
+    const updateData = {name, description, location,website};
+    if (logo) updateData.logo = logo;
+
+const userId = req.id || "507f1f77bcf86cd799439011"; // temporary for testing
 const company = await Company.findOneAndUpdate(
-  { _id: req.params.id, userId: req.id },
+  { _id: req.params.id, userId },
   updateData,
   { new: true }
 );

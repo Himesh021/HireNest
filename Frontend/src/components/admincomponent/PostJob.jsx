@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import Navbar from "../components_lite/Navbar";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { Button } from "../ui/button";
@@ -78,7 +77,6 @@ const PostJob = () => {
 
   return (
     <div>
-      <Navbar />
       <div className="flex items-center justify-center w-screen my-5">
         <form
           onSubmit={submitHandler}
@@ -212,7 +210,7 @@ const PostJob = () => {
               </Button>
             )}
           </div>
-          {companies.length === 0 && (
+          {companies && companies.length === 0 && (
             <p className="text-sm font-bold my-3 text-center text-red-600">
               *Please register a company to post jobs.*
             </p>

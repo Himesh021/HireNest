@@ -1,5 +1,7 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Edit2, MoreHorizontal } from "lucide-react";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import {
   Table,
   TableBody,
@@ -13,15 +15,15 @@ import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import microsoftLogo from "../../assets/microsoftimage.jpg";
 
-const CompaniesTable = ({ companies }) => {
+const CompaniesTable = () => {
   const { companies, searchCompanyByText } = useSelector(
     (store) => store.company,
   );
-  const [filter, setfilter] = useState(companies);
+  const [filteredCompanies, setFilteredCompanies] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
-    const filteredCompany =
+    const filtered =
       companies.length >= 0 &&
       companies.filter((company) => {
         if (!searchCompanyByText) {
@@ -31,7 +33,7 @@ const CompaniesTable = ({ companies }) => {
           ?.toLowerCase()
           .includes(searchCompanyByText.toLowerCase());
       });
-    setFilterCompanfy(filteredCompany);
+    setFilteredCompanies(filtered);
   }, [companies, searchCompanyByText]);
 
   console.log("COMPANIES", companies);
@@ -52,14 +54,14 @@ const CompaniesTable = ({ companies }) => {
       </TableHeader>
 
       <TableBody>
-        {filteredCompany.length <= 0 ? (
+        {filteredCompanies.length <= 0 ? (
           <TableRow>
             <TableCell colSpan={4} className="text-center">
               No Companies Added
             </TableCell>
           </TableRow>
         ) : (
-          companies.map((company, index) => {
+          filteredCompanies.map((company, index) => {
             return (
               <TableRow key={index}>
                 <TableCell>
@@ -86,7 +88,12 @@ const CompaniesTable = ({ companies }) => {
                       sideOffset={8}
                       className="w-32 p-2"
                     >
-                      <div className="flex items-center gap-2 px-2 py-1 rounded-md cursor-pointer hover:bg-muted">
+                      <div
+                        onClick={() =>
+                          navigate(`/admin/companies/${company._id}`)
+                        }
+                        className="flex items-center gap-2 px-2 py-1 rounded-md cursor-pointer hover:bg-muted"
+                      >
                         <Edit2 className="w-4 h-4" />
                         <span>Edit</span>
                       </div>
