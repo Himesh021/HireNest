@@ -46,7 +46,7 @@ export const getCompanies = async (req, res) => {
 export const getCompanyById = async (req, res) => {
   try {
     const companyId = req.params.id;
-    const userId = req.id || "507f1f77bcf86cd799439011"; // temporary for testing
+    const userId = req.id;
 const company = await Company.findOne({
   _id: companyId,
   userId
@@ -66,19 +66,9 @@ const company = await Company.findOne({
 export const updateCompany = async (req, res) => {
   try {
     const { name, description, location,website} = req.body;
-    const file = req.file; // Access the uploaded file
-
-    let logo;
-    if (file) {
-      //cloudinary upload
-      const fileUri = getDataUri(file);
-      const cloudResponse = await cloudinary.uploader.upload(fileUri);
-      logo = cloudResponse.secure_url;
-    }
     const updateData = {name, description, location,website};
-    if (logo) updateData.logo = logo;
 
-const userId = req.id || "507f1f77bcf86cd799439011"; // temporary for testing
+const userId = req.id;
 const company = await Company.findOneAndUpdate(
   { _id: req.params.id, userId },
   updateData,
@@ -88,7 +78,7 @@ const company = await Company.findOneAndUpdate(
 
     if(!company){
       return res.status(404).json({message: "Company not found",success:false});
-    } 
+    }
     return res.status(200).json({message: "Company updated successfully",company,success:true});
   } catch (error) {
     console.error("Error updating company:", error);

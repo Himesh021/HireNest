@@ -12,7 +12,7 @@ const Description = () => {
   const { id: jobId } = useParams();
   const dispatch = useDispatch();
 
-  const { singleJob } = useSelector((store) => store.job);
+  const { singleJob } = useSelector((store) => store.jobs);
   const { user } = useSelector((store) => store.auth);
 
   const [loading, setLoading] = useState(false);

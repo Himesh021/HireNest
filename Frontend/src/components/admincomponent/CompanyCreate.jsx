@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { Button } from "../ui/button";
 import { useNavigate } from "react-router-dom";
 import { COMPANY_API_ENDPOINT } from "@/utils/data";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setSingleCompany } from "@/redux/companyslice";
 import { Input } from "../ui/input";
 import axios from "axios";
@@ -13,8 +13,14 @@ const CompanyCreate = () => {
   const [CompanyName, setCompanyName] = useState();
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { token } = useSelector((store) => store.auth);
 
   const registerNewCompany = async () => {
+    if (!token) {
+      toast.error("Please login to continue");
+      navigate("/login");
+      return;
+    }
     try {
       const res = await axios.post(
         `${COMPANY_API_ENDPOINT}/register`,
@@ -24,6 +30,7 @@ const CompanyCreate = () => {
         {
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
           },
           withCredentials: true,
         },
@@ -37,6 +44,9 @@ const CompanyCreate = () => {
       }
     } catch (error) {
       console.error(error);
+      toast.error(
+        error.response?.data?.message || "Failed to register company",
+      );
     }
   };
 

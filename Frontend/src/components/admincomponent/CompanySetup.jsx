@@ -22,8 +22,18 @@ const CompanySetup = () => {
     file: null,
   });
   const { singleCompany } = useSelector((store) => store.company);
+  const { user, token } = useSelector((store) => store.auth);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!user) {
+      navigate("/login");
+    } else if (user.role !== "Recruiter") {
+      toast.error("Access denied. Only Recruiters can update companies.");
+      navigate("/");
+    }
+  }, [user, navigate]);
 
   const changeEventHandler = (e) => {
     const { name, value } = e.target;
@@ -37,6 +47,11 @@ const CompanySetup = () => {
 
   const submitHandler = async (e) => {
     e.preventDefault();
+    if (!user) {
+      toast.error("Please log in to update the company.");
+      navigate("/login");
+      return;
+    }
     const formData = new FormData();
     formData.append("name", input.name);
     formData.append("description", input.description);
@@ -53,7 +68,7 @@ const CompanySetup = () => {
         formData,
         {
           headers: {
-            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${token}`,
           },
           withCredentials: true,
         },

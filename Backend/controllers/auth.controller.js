@@ -24,11 +24,21 @@ export const login = async (req, res) => {
     res.cookie("token", token, {
       httpOnly: true,
       sameSite: "lax",
+      secure: false, // set to true in production with HTTPS
     });
 
     return res.status(200).json({
       success: true,
       message: "Login successful",
+      user: {
+        _id: user._id,
+        fullname: user.fullname,
+        email: user.email,
+        phoneNumber: user.phoneNumber,
+        role: user.role,
+        profile: user.profile,
+      },
+      token: token,
     });
 
   } catch (error) {

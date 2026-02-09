@@ -146,15 +146,15 @@ const Navbar = () => {
                 <div className="flex flex-col py-2 text-sm">
                   {/* Profile */}
                   {user && user.role === "Student" && (
-                    <div
+                    <Link
+                      to="/profile"
                       className="flex items-center gap-3 px-4 py-2 cursor-pointer
                      text-white/80 hover:text-white
                      hover:bg-white/10 transition"
-                      onClick={() => navigate("/profile")}
                     >
                       <User2 size={18} />
                       <span>Profile</span>
-                    </div>
+                    </Link>
                   )}
 
                   {/* Divider */}

@@ -1,11 +1,13 @@
 import React from "react";
 import { Badge } from "../ui/badge";
+import { useNavigate } from "react-router-dom";
 
 const JobCards = ({ job }) => {
   if (!job) return null;
-
+const navigate=useNavigate(); 
   return (
-    <div className="bg-white border border-gray-200 rounded-xl p-5 transition-all duration-300 hover:shadow-xl hover:border-green-300 cursor-pointer">
+    <div  onClick={()=>navigate(`/description/${job._id}`)}
+    className="bg-white border border-gray-200 rounded-xl p-5 transition-all duration-300 hover:shadow-xl hover:border-green-300 cursor-pointer">
       {/* Top section */}
       <div className="flex justify-between items-start">
         <div>

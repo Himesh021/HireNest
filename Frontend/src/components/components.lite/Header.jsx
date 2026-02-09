@@ -1,10 +1,20 @@
-import React from "react";
+import React, { useState } from "react";
 import { Button } from "../ui/button";
 import { Search } from "lucide-react";
 import { motion } from "framer-motion";
 import FloatingTags from "./FloatingTags";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { setSearchedQuery } from "../../redux/jobSlice";
 
 const Header = () => {
+  const [query, setQuery] = useState("");
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const searchjobHandler = () => {
+    dispatch(setSearchedQuery(query));
+    navigate("/browse");
+  };
   return (
     <div className="relative text-center min-h-[70vh] flex items-center justify-center overflow-hidden">
       {/* 🔥 Background animation layer (DO NOT BLOCK CLICKS) */}
@@ -22,10 +32,14 @@ const Header = () => {
         <div className="flex w-[70%] shadow-lg border border-gray-300 pl-3 rounded-full items-center gap-4 mx-auto bg-white hover:shadow-[#00A264]/30 transition-shadow">
           <input
             type="text"
+            onChange={(e) => setQuery(e.target.value)}
             placeholder="Find Your Dream Job"
             className="outline-none border-none w-full bg-transparent"
           />
-          <Button className="rounded-r-full bg-[#00A264] hover:bg-[#008f58]">
+          <Button
+            onClick={searchjobHandler}
+            className="rounded-r-full bg-[#00A264] hover:bg-[#008f58]"
+          >
             <Search className="h-5 w-5 text-white" />
           </Button>
         </div>

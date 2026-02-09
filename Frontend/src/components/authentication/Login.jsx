@@ -1,13 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { RadioGroup } from "../ui/radio-group";
 import { toast } from "sonner";
 import axios from "axios";
-import { USER_API_ENDPOINT } from "@/utils/data.js";
+import { AUTH_API_ENDPOINT } from "@/utils/data.js";
 import { useDispatch, useSelector } from "react-redux";
-import { setLoading, setUser } from "@/redux/authSlice.js";
+import { setLoading, setUser, setToken } from "@/redux/authSlice.js";
 
 const Login = () => {
   const [input, setInput] = useState({
@@ -18,7 +18,7 @@ const Login = () => {
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { loading } = useSelector((store) => store.auth);
+  const { loading, user } = useSelector((store) => store.auth);
   const changeEventHandler = (e) => {
     setInput({
       ...input,
@@ -38,7 +38,7 @@ const Login = () => {
 
     try {
       dispatch(setLoading(true));
-      const res = await axios.post(`${USER_API_ENDPOINT}/login`, input, {
+      const res = await axios.post(`${AUTH_API_ENDPOINT}/login`, input, {
         headers: {
           "Content-Type": "application/json",
         },
@@ -46,6 +46,7 @@ const Login = () => {
       });
       if (res.data.success) {
         dispatch(setUser(res.data.user));
+        dispatch(setToken(res.data.token));
 
         navigate("/");
         toast.success(res.data.message);
@@ -62,6 +63,12 @@ const Login = () => {
       dispatch(setLoading(false));
     }
   };
+
+  useEffect(() => {
+    if (user) {
+      navigate("/");
+    }
+  }, []);
 
   return (
     <div>

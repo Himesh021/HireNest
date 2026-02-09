@@ -18,13 +18,14 @@ const AdminJobsTable = () => {
   const { companies, searchCompanyByText } = useSelector(
     (store) => store.company,
   );
-  const { allAdminJobs, searchJobByText } = useSelector((store) => store.job);
+  const { allAdminJobs, searchJobByText } = useSelector((store) => store.jobs);
   const navigate = useNavigate();
 
   const [filterJobs, setFilterJobs] = useState(allAdminJobs);
 
   useEffect(() => {
     const filteredJobs =
+      allAdminJobs &&
       allAdminJobs.length >= 0 &&
       allAdminJobs.filter((job) => {
         if (!searchJobByText) {
@@ -37,7 +38,7 @@ const AdminJobsTable = () => {
             .includes(searchJobByText.toLowerCase())
         );
       });
-    setFilterJobs(filteredJobs);
+    setFilterJobs(filteredJobs || []);
   }, [allAdminJobs, searchJobByText]);
 
   console.log("JOBS", allAdminJobs);

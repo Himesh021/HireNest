@@ -7,7 +7,7 @@ import { setAllApplicants } from "@/redux/applicationSlice";
 import { APPLICATION_API_ENDPOINT } from "@/utils/data";
 
 const Applicants = () => {
-  const params = useParams();
+  const params = useParams();  
   const dispatch = useDispatch();
   const { applicants } = useSelector((store) => store.application);
 

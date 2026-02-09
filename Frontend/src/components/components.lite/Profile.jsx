@@ -6,11 +6,13 @@ import { Contact, Mail, Pen } from "lucide-react";
 import Appliedjobs from "./Appliedjobs";
 import EditProfiileModal from "./EditProfiileModal";
 import { useSelector } from "react-redux";
+import useGetAppliedJobs from "@/hooks/useGetAllAppliedJob";
 
 // const skills = ["JavaScript", "React", "Node.js", "CSS", "HTML", "Python"];
 
 const isResume = true;
 const Profile = () => {
+  useGetAppliedJobs();
   const [open, setOpen] = useState(false);
   const { user } = useSelector((store) => store.auth);
 

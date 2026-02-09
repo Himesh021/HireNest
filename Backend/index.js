@@ -32,6 +32,15 @@ app.use('/api/company',companyRoutes);
 app.use('/api/job',jobRoutes);
 app.use('/api/application',applicationRoutes);
 app.use('/api/auth',authRoutes);
+
+// ---------code for deployment-------
+if(process.env.NODE_ENV === "production"){
+  const dirpath = Path.resolve();
+  app.use(express.static('./Frontend/dist'));
+  app.get('*',(req,res)=>{
+   res.sendFile(path.resolve(dirpath,'./Frontend/dist','index.html'));
+  });
+}
 app.listen(PORT,()=>{
   connectDB();
 console.log(`server is running on port ${PORT}`);

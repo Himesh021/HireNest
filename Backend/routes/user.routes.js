@@ -5,7 +5,7 @@ import { singleUpload } from '../middlewares/multer.js';
 
 const router = express.Router();
 
-router.route('/register').post(singleUpload,register);// singleUpload middleware added here
+router.route('/register').post(register);// singleUpload middleware removed for testing
 router.route('/login').post(login); 
 router.route('/logout').post(logout); 
 router.route('/profile/update').post(isAuthenticated, singleUpload, updateProfile);

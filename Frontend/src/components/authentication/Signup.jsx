@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Input } from "../ui/input";
@@ -38,6 +38,8 @@ const Signup = () => {
     password: "",
     role: "",
     phoneNumber: "",
+    pancard: "",
+    adharcard: "",
     file: null,
   });
 
@@ -63,6 +65,8 @@ const Signup = () => {
     formData.append("fullname", input.fullname);
     formData.append("email", input.email);
     formData.append("password", input.password);
+    formData.append("pancard", input.pancard);
+    formData.append("adharcard", input.adharcard);
     formData.append("role", input.role);
     formData.append("phoneNumber", input.phoneNumber);
     if (input.file) formData.append("file", input.file);
@@ -85,6 +89,13 @@ const Signup = () => {
       dispatch(setLoading(false));
     }
   };
+  const { user } = useSelector((store) => store.auth);
+
+  useEffect(() => {
+    if (user) {
+      navigate("/");
+    }
+  }, []);
 
   return (
     <div className="min-h-screen grid grid-cols-1 lg:grid-cols-2 overflow-hidden">

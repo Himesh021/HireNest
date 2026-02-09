@@ -2,15 +2,21 @@ import { setAllAdminJobs } from "@/redux/jobSlice";
 import { JOB_API_ENDPOINT } from "@/utils/data";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 const useGetAllAdminJobs = () => {
   const dispatch = useDispatch();
+  const { user } = useSelector((store) => store.auth);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchAllAdminJobs = async () => {
+      if (!user || user.role !== "Recruiter") {
+        setError("User not authorized to fetch admin jobs.");
+        return;
+      }
+
       setLoading(true);
       setError(null);
       try {
@@ -26,17 +32,20 @@ const useGetAllAdminJobs = () => {
         }
       } catch (error) {
         console.error("Fetch Error:", error);
-        setError(error.message || "An error occurred.");
+        if (error.response && error.response.status === 401) {
+          setError("Unauthorized: Please log in as a Recruiter.");
+        } else {
+          setError(error.message || "An error occurred.");
+        }
       } finally {
         setLoading(false);
       }
     };
 
     fetchAllAdminJobs();
-  }, [dispatch]);
+  }, [dispatch, user]);
 
   return { loading, error };
 };
 
 export default useGetAllAdminJobs;
-  

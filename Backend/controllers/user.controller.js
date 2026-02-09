@@ -5,71 +5,62 @@ import jwt from "jsonwebtoken";
 import cloudinary from "../utils/cloud.js";
 import getDataUri from "../utils/datauri.js";
 //register controller
-export const  register = async (req, res) => {
+export const register = async (req, res) => {
   try {
-    console.log("req.body:", req.body);
-    console.log("req.file:", req.file);
-    const { fullname, email, phoneNumber, password, role } = req.body;
-    if(!fullname || !email || !phoneNumber || !password || !role){
-      return res.status(400).json({
-         message: "All fields are required",
-        success: false,
-      });
+    const { fullname, email, phoneNumber, password, role, pancard, adharcard } = req.body;
+
+    if (!fullname || !email || !phoneNumber || !password || !role || !pancard || !adharcard) {
+      return res.status(400).json({ message: "All fields are required", success: false });
     }
-    if(role !== "Student" && role !== "Recruiter"){
-      return res.status(400).json({
-         message: "Invalid role selected",
-        success: false,
-      });
+
+    if (!["Student", "Recruiter"].includes(role)) {
+      return res.status(400).json({ message: "Invalid role selected", success: false });
     }
-    const file = req.file;
-    let profilePhotoUrl = "";
-    if (file) {
-      try {
-        const fileUri = getDataUri(file);
-        const cloudResponse = await cloudinary.uploader.upload(fileUri.content);
-        profilePhotoUrl = cloudResponse.secure_url;
-      } catch (uploadError) {
-        console.error("File upload failed:", uploadError.message);
-        // Continue without file upload if it fails
-      }
-    }
+
     const existingUser = await User.findOne({
       $or: [{ email }, { phoneNumber }]
     });
-//point for learning--->
     if (existingUser) {
       return res.status(400).json({
         message: "User with this email or phone number already exists",
         success: false,
       });
     }
-    //convert password to hashed password
+
+    if (await User.findOne({ adharcard })) {
+      return res.status(400).json({ message: "Aadhaar already exists", success: false });
+    }
+
+    if (await User.findOne({ pancard })) {
+      return res.status(400).json({ message: "PAN already exists", success: false });
+    }
+
     const hashedPassword = await bcrypt.hash(password, 10);
+
     const newUser = new User({
       fullname,
       email,
       phoneNumber,
+      pancard,
+      adharcard,
       password: hashedPassword,
       role,
-      profile: {
-       profilePhoto: profilePhotoUrl,
-      },
-      
     });
-    return res.status(201).json({
-      message: `Account created successfully for ${fullname}`,
+
+    await newUser.save();
+
+    res.status(201).json({
+      message: "Account created successfully",
       success: true,
-      user: await newUser.save(),
+      user: newUser,
     });
+
   } catch (error) {
-    console.error("Error during user registration:", error);
-    res.status(500).json({
-      message: "Internal server error",
-      success: false,
-    }); 
+    console.error(error);
+    res.status(500).json({ message: "Internal server error", success: false });
   }
 };
+
 //login controller
 export const login = async (req, res) => {
   try {

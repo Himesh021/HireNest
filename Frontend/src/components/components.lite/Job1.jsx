@@ -2,6 +2,7 @@ import { Bookmark, BookmarkCheck } from "lucide-react";
 import React, { useState } from "react";
 import { Button } from "../ui/button";
 import { Badge } from "../ui/badge";
+import { Avatar, AvatarImage } from "../ui/avatar";
 import { useNavigate } from "react-router-dom";
 
 const Job1 = ({ job }) => {
