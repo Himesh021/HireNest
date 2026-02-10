@@ -4,7 +4,7 @@ import { JOB_API_ENDPOINT } from "@/utils/data";
 import { useDispatch, useSelector } from "react-redux";
 import { setAllJobs } from "@/redux/jobSlice";
 
-function useGetAlljobs() {
+function useGetAllJobs() {
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -37,4 +37,4 @@ function useGetAlljobs() {
   return { loading, error };
 }
 
-export default useGetAlljobs;
+export default useGetAllJobs;
