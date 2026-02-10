@@ -3,10 +3,10 @@ import Navbar from "./Navbar";
 import Job1 from "./Job1";
 import { useDispatch, useSelector } from "react-redux";
 import { setSearchedQuery } from "@/redux/jobSlice";
-import useGetAllJobs from "@/hooks/useGetAllJobs";
+import useGetAlljobs from "@/hooks/useGetAlljobs";
 
 const Browse = () => {
-  useGetAllJobs();
+  useGetAlljobs();
   const { alljobs = [] } = useSelector((store) => store.jobs);
   const dispatch = useDispatch();
   useEffect(() => {
