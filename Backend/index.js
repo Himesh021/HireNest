@@ -37,12 +37,12 @@ app.use('/api/auth',authRoutes);
 // ---------code for deployment-------
 if(process.env.NODE_ENV === "production"){
   const dirpath = resolve();
-  app.use(express.static('./Frontend/dist'));
+  app.use(express.static('../Frontend/dist'));
   app.use((req, res, next) => {
     if (req.path.startsWith('/api')) {
       next();
     } else {
-      res.sendFile(path.resolve(dirpath, './Frontend/dist', 'index.html'));
+      res.sendFile(path.resolve(dirpath, '../Frontend/dist', 'index.html'));
     }
   });
 }
