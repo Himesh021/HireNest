@@ -1,9 +1,14 @@
 import jwt from "jsonwebtoken";
+import bcrypt from 'bcryptjs';
 import User from "../models/user.model.js";
 
 export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
+
+    if (!email || !password) {
+      return res.status(400).json({ message: "Email and password are required" });
+    }
 
     // 1. find user
     const user = await User.findOne({ email });
@@ -11,7 +16,11 @@ export const login = async (req, res) => {
       return res.status(400).json({ message: "User not found" });
     }
 
-    // (password check skipped for now)
+    // 2. check password
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
+      return res.status(400).json({ message: "Invalid password" });
+    }
 
     // 2. CREATE TOKEN (THIS IS THE LINE YOU ASKED ABOUT)
     const token = jwt.sign(
