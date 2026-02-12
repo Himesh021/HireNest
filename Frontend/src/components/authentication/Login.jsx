@@ -19,45 +19,35 @@ const Login = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { loading, user } = useSelector((store) => store.auth);
+
   const changeEventHandler = (e) => {
     setInput({
       ...input,
       [e.target.name]: e.target.value,
     });
   };
-  const changeFileHandler = (e) => {
-    setInput({
-      ...input,
-      file: e.target.files[0],
-    });
-  };
 
-  //api call on submit
   const submitHandler = async (e) => {
     e.preventDefault();
 
     try {
       dispatch(setLoading(true));
+
       const res = await axios.post(`${AUTH_API_ENDPOINT}/login`, input, {
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         withCredentials: true,
       });
+
       if (res.data.success) {
         dispatch(setUser(res.data.user));
         dispatch(setToken(res.data.token));
-
         navigate("/");
         toast.success(res.data.message);
       }
     } catch (error) {
-      console.log(error);
-
       const message = error.response
         ? error.response.data.message
-        : "An unexpected error occurred. Please try again.";
-
+        : "Something went wrong";
       toast.error(message);
     } finally {
       dispatch(setLoading(false));
@@ -65,104 +55,260 @@ const Login = () => {
   };
 
   useEffect(() => {
-    if (user) {
-      navigate("/");
-    }
-  }, []);
+    if (user) navigate("/");
+  }, [user]);
 
   return (
-    <div>
-      <div className="flex items-center justify-center max-w-7xl mx-auto">
-        <form
-          onSubmit={submitHandler}
-          className="w-1/2 border-gray-200 rounded-md p-4 my-10"
-        >
-          <h1 className="font-bold text-xl mb-5 text-center text-[#00A264]">
-            Login
-          </h1>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-black via-gray-900 to-black px-4">
+      <form
+        onSubmit={submitHandler}
+        className="w-full max-w-md backdrop-blur-xl bg-white/5 border border-white/10 rounded-3xl shadow-2xl p-8"
+      >
+        {/* Heading */}
+        <div className="text-center mb-8">
+          <h1 className="text-3xl font-bold text-white">Welcome Back</h1>
+          <p className="text-gray-400 text-sm mt-1">Sign in to your account</p>
+        </div>
 
-          <div className="my-2">
-            <Label>Email</Label>
-            <Input
-              name="email"
-              value={input.email}
-              onChange={changeEventHandler}
-              placeholder="johndoe@gamil.com"
-            ></Input>
-          </div>
-          <div className="my-2">
-            <Label>Password</Label>
-            <Input
-              name="password"
-              value={input.password}
-              onChange={changeEventHandler}
-              type="password"
-              placeholder="********"
-            ></Input>
-          </div>
+        {/* Email */}
+        <div className="mb-5">
+          <Label className="text-gray-300">Email</Label>
+          <Input
+            name="email"
+            value={input.email}
+            onChange={changeEventHandler}
+            placeholder="johndoe@gmail.com"
+            className="mt-2 bg-white/10 border-none text-white placeholder-gray-400 focus-visible:ring-2 focus-visible:ring-[#00A264]"
+          />
+        </div>
 
-          <div className="flex items-center justify-between ">
-            <Label>Role</Label>
-            <RadioGroup className="flex items-center gap-4 my-5">
-              <div className="flex items-center gap-3">
-                <Input
+        {/* Password */}
+        <div className="mb-5">
+          <Label className="text-gray-300">Password</Label>
+          <Input
+            type="password"
+            name="password"
+            value={input.password}
+            onChange={changeEventHandler}
+            placeholder="********"
+            className="mt-2 bg-white/10 border-none text-white placeholder-gray-400 focus-visible:ring-2 focus-visible:ring-[#00A264]"
+          />
+        </div>
+
+        {/* Role */}
+        <div className="mb-6">
+          <Label className="text-gray-300">Select Role</Label>
+
+          <RadioGroup className="flex gap-6 mt-3">
+            {["Student", "Recruiter"].map((role) => (
+              <label
+                key={role}
+                className={`px-5 py-2 rounded-full cursor-pointer border text-sm transition
+                ${
+                  input.role === role
+                    ? "bg-[#00A264] text-white border-[#00A264]"
+                    : "border-gray-600 text-gray-300 hover:border-[#00A264]"
+                }`}
+              >
+                <input
                   type="radio"
+                  value={role}
                   name="role"
-                  value="Student"
-                  checked={input.role === "Student"}
+                  checked={input.role === role}
                   onChange={changeEventHandler}
-                  className="cursor-pointer"
+                  className="hidden"
                 />
-                <Label htmlFor="r1">Student</Label>
-              </div>
-              <div className="flex items-center gap-3">
-                <Input
-                  type="radio"
-                  name="role"
-                  value="Recruiter"
-                  checked={input.role === "Recruiter"}
-                  onChange={changeEventHandler}
-                  className="cursor-pointer"
-                />
-                <Label htmlFor="r2">Recruiter</Label>
-              </div>
-            </RadioGroup>
-          </div>
+                {role}
+              </label>
+            ))}
+          </RadioGroup>
+        </div>
 
-          {loading ? (
-            <div className="flex items-center justify-center my-6">
-              <div className="h-5 w-5 animate-spin rounded-full border-2 border-white border-t-transparent" />
-              <span className="ml-2 text-sm text-gray-300">Logging in...</span>
-            </div>
-          ) : (
-            <button
-              className="block w-3/4 max-w-md mx-auto my-4 py-3 rounded-md 
-               bg-black text-white font-medium 
-               hover:bg-gray-900 transition 
-               flex items-center justify-center"
-            >
-              Login
-            </button>
-          )}
-
-          {/*No account then sign up*/}
-          <div>
-            <p className=" text-gray-500 text-center my-2">
-              Create New Account{" "}
-              <Link to="/signup" className="text-blue-700">
-                <button
-                  className="block w-1/2 py-3 my-3  text-white flex items-center justify-center max-w-7xl mx-auto 
-    bg-green-600 hover:bg-green-800/90 rounded-md "
-                >
-                  Sign Up
-                </button>
-              </Link>
-            </p>
+        {/* Button */}
+        {loading ? (
+          <div className="flex justify-center py-3">
+            <div className="h-6 w-6 animate-spin rounded-full border-2 border-[#00A264] border-t-transparent" />
           </div>
-        </form>
-      </div>
+        ) : (
+          <button
+            type="submit"
+            className="w-full py-3 rounded-xl font-semibold text-white
+            bg-[#00A264] hover:bg-[#009056] transition shadow-lg shadow-[#00A264]/30"
+          >
+            Login →
+          </button>
+        )}
+
+        {/* Signup */}
+        <p className="text-center text-gray-400 text-sm mt-6">
+          Don't have an account?{" "}
+          <Link to="/signup" className="text-[#00A264] hover:underline">
+            Sign up
+          </Link>
+        </p>
+      </form>
     </div>
   );
 };
 
 export default Login;
+
+// // /
+//       import React, { useState, useEffect } from "react";
+// import { Link, useNavigate } from "react-router-dom";
+// import { Label } from "../ui/label";
+// import { Input } from "../ui/input";
+// import { RadioGroup } from "../ui/radio-group";
+// import { toast } from "sonner";
+// import axios from "axios";
+// import { AUTH_API_ENDPOINT } from "@/utils/data.js";
+// import { useDispatch, useSelector } from "react-redux";
+// import { setLoading, setUser, setToken } from "@/redux/authSlice.js";
+
+// const Login = () => {
+//   const [input, setInput] = useState({
+//     email: "",
+//     password: "",
+//     role: "",
+//   });
+
+//   const navigate = useNavigate();
+//   const dispatch = useDispatch();
+//   const { loading, user } = useSelector((store) => store.auth);
+
+//   const changeEventHandler = (e) => {
+//     setInput({
+//       ...input,
+//       [e.target.name]: e.target.value,
+//     });
+//   };
+
+//   const submitHandler = async (e) => {
+//     e.preventDefault();
+
+//     try {
+//       dispatch(setLoading(true));
+
+//       const res = await axios.post(`${AUTH_API_ENDPOINT}/login`, input, {
+//         headers: { "Content-Type": "application/json" },
+//         withCredentials: true,
+//       });
+
+//       if (res.data.success) {
+//         dispatch(setUser(res.data.user));
+//         dispatch(setToken(res.data.token));
+//         navigate("/");
+//         toast.success(res.data.message);
+//       }
+//     } catch (error) {
+//       const message = error.response
+//         ? error.response.data.message
+//         : "Something went wrong";
+//       toast.error(message);
+//     } finally {
+//       dispatch(setLoading(false));
+//     }
+//   };
+
+//   useEffect(() => {
+//     if (user) navigate("/");
+//   }, [user]);
+
+//   return (
+//     <div
+//       className="min-h-screen flex items-center justify-center
+// bg-gradient-to-br from-white via-[#E6F7F0] to-white px-4"
+//     >
+//       <form
+//         onSubmit={submitHandler}
+//         className="w-full max-w-md backdrop-blur-xl bg-white/5 border border-white/10 rounded-3xl shadow-2xl p-8"
+//       >
+//         {/* Heading */}
+//         <div className="text-center mb-8">
+//           <h1 className="text-3xl font-bold text-black">Welcome Back</h1>
+//           <p className="text-black text-sm mt-1">Sign in to your account</p>
+//         </div>
+
+//         {/* Email */}
+//         <div className="mb-5">
+//           <Label className="text-black-300">Email</Label>
+//           <Input
+//             name="email"
+//             value={input.email}
+//             onChange={changeEventHandler}
+//             placeholder="johndoe@gmail.com"
+//             className="mt-2 bg-white/10 border-none text-white placeholder-gray-400 focus-visible:ring-2 focus-visible:ring-[#00A264]"
+//           />
+//         </div>
+
+//         {/* Password */}
+//         <div className="mb-5">
+//           <Label className="text-black-300">Password</Label>
+//           <Input
+//             type="password"
+//             name="password"
+//             value={input.password}
+//             onChange={changeEventHandler}
+//             placeholder="********"
+//             className="mt-2 bg-white/10 border-none text-white placeholder-gray-400 focus-visible:ring-2 focus-visible:ring-[#00A264]"
+//           />
+//         </div>
+
+//         {/* Role */}
+//         <div className="mb-6">
+//           <Label className="text-black-300">Select Role</Label>
+
+//           <RadioGroup className="flex gap-6 mt-3">
+//             {["Student", "Recruiter"].map((role) => (
+//               <label
+//                 key={role}
+//                 className={`px-5 py-2 rounded-full cursor-pointer border text-sm transition
+//                 ${
+//                   input.role === role
+//                     ? "bg-[#00A264] text-white border-[#00A264]"
+//                     : "border-gray-600 text-black-300 hover:border-[#00A264]"
+//                 }`}
+//               >
+//                 <input
+//                   type="radio"
+//                   value={role}
+//                   name="role"
+//                   checked={input.role === role}
+//                   onChange={changeEventHandler}
+//                   className="hidden"
+//                 />
+//                 {role}
+//               </label>
+//             ))}
+//           </RadioGroup>
+//         </div>
+
+//         {/* Button */}
+//         {loading ? (
+//           <div className="flex justify-center py-3">
+//             <div className="h-6 w-6 animate-spin rounded-full border-2 border-[#00A264] border-t-transparent" />
+//           </div>
+//         ) : (
+//           <button
+//             type="submit"
+//             className="w-full py-3 rounded-xl font-semibold text-white
+//             bg-[#00A264] hover:bg-[#009056] transition shadow-lg shadow-[#00A264]/30"
+//           >
+//             Login →
+//           </button>
+//         )}
+
+//         {/* Signup */}
+//         <p className="text-center text-gray-400 text-sm mt-6">
+//           Don't have an account?{" "}
+//           <Link to="/signup" className="text-[#00A264] hover:underline">
+//             Sign up
+//           </Link>
+//         </p>
+//       </form>
+//     </div>
+//   );
+// };
+
+// export default Login;
+// /

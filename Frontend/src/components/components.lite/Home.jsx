@@ -1,6 +1,9 @@
 import React, { useEffect } from "react";
 import Header from "./Header";
 import Categories from "./Categories";
+import PopularJobs from "./PopularJobs";
+import RecentJobs from "./RecentJobs";
+import RecommendedJobs from "./RecommendedJobs";
 import LatestJobs from "./LatestJobs";
 import Footer from "./Footer";
 import useGetAlljobs from "@/hooks/useGetAlljobs";
@@ -25,9 +28,12 @@ const Home = () => {
     <div>
       <Header />
       <Categories />
-      {loading && <p>Loading jobs...</p>}
-      {error && <p>Error: {error}</p>}
-      {!loading && !error && <LatestJobs jobs={jobs} />}
+      <PopularJobs />
+      <RecentJobs />
+      <RecommendedJobs />
+      {/* {loading && <p>Loading jobs...</p>}
+      {error && <p>Error: {error}</p>} */}
+      {/* {!loading && !error && <LatestJobs jobs={jobs} />} */}
       <Footer />
     </div>
   );
