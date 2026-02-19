@@ -56,8 +56,20 @@ export const register = async (req, res) => {
     });
 
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Internal server error", success: false });
+    console.error("Error during register:", error);
+
+    if (error?.code === 11000) {
+      const duplicateField = Object.keys(error.keyPattern || {})[0] || "field";
+      return res.status(409).json({
+        message: `${duplicateField} already exists`,
+        success: false,
+      });
+    }
+
+    return res.status(500).json({
+      message: error?.message || "Internal server error",
+      success: false,
+    });
   }
 };
 
