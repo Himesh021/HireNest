@@ -4,3 +4,4 @@ export const APPLICATION_API_ENDPOINT = "https://hirenest-9bnu.onrender.com/api/
 export const AUTH_API_ENDPOINT = "https://hirenest-9bnu.onrender.com/api/auth";
 
 export const COMPANY_API_ENDPOINT = "https://hirenest-9bnu.onrender.com/api/company";
+

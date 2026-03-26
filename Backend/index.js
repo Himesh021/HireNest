@@ -15,7 +15,7 @@ const app = express();
 
 const allowedOrigins = [
   "https://hirenest-9bnu.onrender.com",
-  "http://localhost:5173",
+  "http://127.0.0.1:5173",
   "http://localhost:3000",
   process.env.CLIENT_URL,
 ].filter(Boolean);
@@ -36,8 +36,10 @@ const corsOptions = {
 };
 
 // Register CORS first so even parser/route errors still include CORS headers.
-app.use(cors(corsOptions));
-app.options('*', cors(corsOptions));
+app.use(cors({
+  origin: true,   // 🔥 allow all origins dynamically
+  credentials: true
+}));
 
 // Handle preflight requests explicitly before other routes
 app.use((req, res, next) => {
